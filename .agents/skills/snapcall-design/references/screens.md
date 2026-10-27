@@ -54,7 +54,7 @@ Not yet designed beyond the decided behavior. Use the table view with four perce
 
 **Pass status**: a light plate with a check, `NEXT ROUND UNLOCKED`, when the score meets the minimum. The failing state is not designed yet, and the pass threshold is undecided; ask before designing it.
 
-**Recap**: a `label` header, `THE HANDS`, then five `HandRecapRow`s in round order. Below them, in `body` and `textSecondary`: "Retry this round any time to play five new hands."
+**Recap**: a `label` header, `THE HANDS`, then five `HandRecapRow`s in round order. No note follows the list.
 
 **Actions** at the bottom: primary `Next round`, then secondary `Retry this round`, which deals five new hands.
 
