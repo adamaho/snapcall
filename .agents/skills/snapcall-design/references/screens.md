@@ -10,7 +10,7 @@ The approved layout for every hand-strength situation. The sample situation: hol
 
 **Header** (status bar inset + 20dp top, 20dp screen margin)
 
-- A row at least 44dp tall: `CloseButton`, then the `ModuleChip` (`HAND STRENGTH` / `HAND 3 OF 5`).
+- A row at least 44dp tall: `CloseButton`, then the `ModuleBreadcrumb` (`Hand strength › Hand 3 of 5`).
 - `RoundProgress` below it, 10dp under the row.
 
 **Prompt**: the question in `prompt` style, centered and balanced over two lines, such as "What's your best hand?" Ask one question per situation.
@@ -35,7 +35,7 @@ Not yet designed beyond the decided behavior. Use the table view with four perce
 
 ## 3. Round complete
 
-**Header**: `CloseButton` ("Close") and the `ModuleChip` with `ROUND COMPLETE`. There is no progress bar.
+**Header**: `CloseButton` ("Close") and the `ModuleBreadcrumb` ending in `Round complete`. There is no progress bar.
 
 **Stars**: the `StarRow`, 6dp below the header.
 

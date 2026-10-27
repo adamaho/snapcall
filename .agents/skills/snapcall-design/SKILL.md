@@ -17,13 +17,13 @@ Everything that is not a card is gray or white, so the cards are the brightest a
 
 - **Blue (`right`) means right.** It marks the right answer, the cards that make the hand, and the probability puzzle's helpful cards.
 - **Orange (`wrong`) means wrong.** It marks a wrong pick, a wrong verdict and a retried hand.
-- Nothing else gets color. That includes primary buttons, the module chip, progress, stars and pass status, which are all white or gray.
+- Nothing else gets color. That includes primary buttons, the breadcrumb, progress, stars and pass status, which are all white or gray.
 
 Blue and orange were chosen over green and red so colorblind players can tell them apart. Every color state also has a second cue: a check, a strike-through or a label.
 
 ## Component names
 
-Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`, `Plate`, `PlateChain`, `ModuleChip`, `RoundProgress`, `CloseButton`, `PokerTable`, `StreetLabels`, `HandPlate`, `AnswerButton`, `AnswerGrid`, `ActionButton`, `VerdictPanel`, `StarRow` and `HandRecapRow`. Use the same convention for component-specific types (`AnswerState`, `PlateColor`) and matching filenames. See [references/components.md](references/components.md).
+Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`, `Plate`, `PlateChain`, `ModuleBreadcrumb`, `RoundProgress`, `CloseButton`, `PokerTable`, `StreetLabels`, `HandPlate`, `AnswerButton`, `AnswerGrid`, `ActionButton`, `VerdictPanel`, `StarRow` and `HandRecapRow`. Use the same convention for component-specific types (`AnswerState`, `PlateColor`) and matching filenames. See [references/components.md](references/components.md).
 
 ## Typography
 

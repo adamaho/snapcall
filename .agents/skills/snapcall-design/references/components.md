@@ -15,7 +15,12 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - A `Plate` is a text label on a flat fill with 4dp corners. It is never slanted or skewed.
 - `PlateColor`: `Light` (`textPrimary` fill, `onLight` text), `Surface` (`surface` fill, `textPrimary` text), `Right` and `Wrong` (`onLight` text on the hue).
 - A `PlateChain` sets consecutive plates in a row 4dp apart (6dp for the verdict chain), so they read as one caption.
-- `ModuleChip` is the header's chain: a light `HAND STRENGTH` plate then a surface plate showing the round position (`HAND 3 OF 5`) or `ROUND COMPLETE`.
+
+## ModuleBreadcrumb
+
+- The header's location, as plain text with no plates or fills: the module (`Hand strength`) in `textMuted`, a 12dp chevron in `textMuted`, then the current step (`Hand 3 of 5` or `Round complete`) in `textPrimary`.
+- `breadcrumb` style, sentence case, with 6dp gaps between parts.
+- Announce as "Hand strength, hand 3 of 5". It is not interactive yet.
 
 ## RoundProgress
 
