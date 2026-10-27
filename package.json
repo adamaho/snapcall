@@ -3,37 +3,27 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "changeset": "changeset",
-    "changeset:status": "changeset status",
     "check": "pnpm fmt:check && turbo run lint tsc test:unit openapi:check",
+    "build": "turbo run build",
     "clean": "turbo run clean && rimraf node_modules",
     "dev": "turbo run dev --ui=tui",
+    "server:dev": "turbo run dev --filter=@snapcall/snapcall-server --ui=tui",
     "lint": "turbo run lint",
     "fmt": "oxfmt .",
     "fmt:check": "oxfmt --check .",
     "tsc": "turbo run tsc",
-    "version-packages": "changeset version",
-    "server:dev": "turbo run dev --filter=@snapcall/snapcall-server --ui=tui",
     "test:unit": "turbo run test:unit",
     "test:integration": "turbo run test:integration"
   },
   "devDependencies": {
     "@adamaho/nopeus-oxfmt-config": "catalog:",
-    "@adamaho/nopeus-oxlint-config": "catalog:",
-    "@adamaho/nopeus-oxlint-plugin": "catalog:",
-    "@changesets/cli": "catalog:",
-    "@effect/vitest": "catalog:",
-    "@types/node": "catalog:",
-    "effect": "catalog:",
     "oxfmt": "catalog:",
-    "oxlint": "catalog:",
     "rimraf": "catalog:",
-    "turbo": "catalog:",
-    "vitest": "catalog:"
+    "turbo": "catalog:"
   },
   "engines": {
     "node": "^24.22.1",
-    "pnpm": "^12.14.0"
+    "pnpm": "^12.15.0"
   },
-  "packageManager": "pnpm@12.14.0"
+  "packageManager": "pnpm@12.15.0"
 }

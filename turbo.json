@@ -5,6 +5,12 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**"]
     },
+    "image": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "passThroughEnv": ["GITHUB_SHA", "SNAPCALL_IMAGE_REGISTRY"],
+      "outputs": []
+    },
     "transit": {
       "dependsOn": ["^transit"]
     },
@@ -22,14 +28,18 @@
     "fmt:check": {
       "outputs": []
     },
+    "openapi:check": {
+      "cache": false,
+      "outputs": []
+    },
     "clean": {
       "cache": false,
       "outputs": []
     },
     "infra:up": {
       "cache": false,
-      "outputs": [],
-      "env": ["COMPOSE_PROJECT_NAME", "SNAPCALL_POSTGRES_PORT"]
+      "env": ["COMPOSE_PROJECT_NAME", "SNAPCALL_POSTGRES_PORT"],
+      "outputs": []
     },
     "infra:down": {
       "cache": false,
@@ -49,6 +59,12 @@
       "dependsOn": ["@snapcall/infra-local#infra:up"],
       "outputs": []
     },
+    "db:migrate": {
+      "cache": false,
+      "dependsOn": ["@snapcall/infra-local#infra:up"],
+      "env": ["DATABASE_URL"],
+      "outputs": []
+    },
     "db:push": {
       "cache": false,
       "dependsOn": ["db:create"],
@@ -58,6 +74,12 @@
       "cache": false,
       "persistent": true,
       "dependsOn": ["transit"]
+    },
+    "@snapcall/snapcall-server#dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["transit", "db:migrate"],
+      "env": ["DATABASE_URL", "SNAPCALL_SERVER_HOST", "SNAPCALL_SERVER_PORT"]
     },
     "test:unit": {
       "dependsOn": ["transit"],
@@ -71,22 +93,6 @@
     },
     "test:component": {
       "dependsOn": ["transit"],
-      "outputs": []
-    },
-    "db:migrate": {
-      "cache": false,
-      "dependsOn": ["@snapcall/infra-local#infra:up"],
-      "env": ["DATABASE_URL"],
-      "outputs": []
-    },
-    "@snapcall/snapcall-server#dev": {
-      "cache": false,
-      "persistent": true,
-      "dependsOn": ["transit", "db:migrate"],
-      "env": ["DATABASE_URL", "SNAPCALL_SERVER_HOST", "SNAPCALL_SERVER_PORT"]
-    },
-    "openapi:check": {
-      "cache": false,
       "outputs": []
     }
   }

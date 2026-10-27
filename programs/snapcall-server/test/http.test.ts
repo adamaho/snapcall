@@ -1,18 +1,20 @@
 import { NodeHttpServer } from "@effect/platform-node";
 import { it } from "@effect/vitest";
-import { api } from "@snapcall/snapcall-api/api";
+import * as Client from "@snapcall/snapcall-server-client/client";
 import { Effect, Layer } from "effect";
 import { HttpClient, HttpRouter } from "effect/http";
-import { HttpApiClient } from "effect/http-api";
 import { expect } from "vitest";
 
 import * as Http from "#src/http.ts";
 
 const TestLive = HttpRouter.serve(Http.layer).pipe(Layer.provideMerge(NodeHttpServer.layerTest));
 
-it.effect("serves health through the shared API client without a database", () =>
+it.effect("returns liveness through HTTP and the generated client without a database", () =>
   Effect.gen(function* () {
-    const client = yield* HttpApiClient.make(api);
+    const response = yield* HttpClient.get("/health");
+    expect(response.status).toBe(200);
+    expect(yield* response.json).toEqual({ data: { status: "ok" } });
+    const client = yield* Client.make("");
     expect(yield* client.health.check()).toEqual({ data: { status: "ok" } });
   }).pipe(Effect.provide(TestLive)),
 );

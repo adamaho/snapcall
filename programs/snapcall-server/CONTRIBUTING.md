@@ -31,8 +31,9 @@ The direct package `start` and `dev` commands do not run migrations.
 
 `packages/snapcall-api/src/api.ts` is authoritative. HTTP handlers live in
 `src/http.ts`; `src/main.ts` wires the Node HTTP server and Effect runtime.
-Tests derive a typed client from that same contract and use a real ephemeral
-HTTP listener through `NodeHttpServer.layerTest`.
+The `@snapcall/snapcall-server-client` package derives its typed client from that
+contract. HTTP tests use `Client.make("")` against a real ephemeral listener
+through `NodeHttpServer.layerTest`, matching Goho.
 
 After changing the contract:
 
@@ -50,7 +51,9 @@ pnpm --filter @snapcall/infra-local infra:up
 pnpm --filter @snapcall/snapcall-server db:migrate
 ```
 
-`src/database/client.ts` owns the SQL pool configuration. The migration command
+`packages/core/src/database/postgres.ts` owns the shared SQL pool defaults.
+`src/database/client.ts` supplies the server's connection configuration through
+`Postgres.layerConfig`, matching Goho. The migration command
 uses the same explicit `PgMigrator.fromRecord` registry as Goho, in
 `src/database/migrations.ts`, with a `snapcall_migrations` ledger.
 
@@ -79,7 +82,8 @@ pnpm --filter @snapcall/snapcall-server test:unit
 Unit tests need no database. Integration tests use real PostgreSQL and create a
 unique schema per test, dropping it when the test finishes. They exercise the
 production migration registry and test-only migration fixtures, including
-idempotence and rollback after a failed batch.
+idempotence and rollback after a failed batch. The core package also verifies
+that the SQL and Postgres services share one pool and reuse a connection.
 
 Use an isolated local test database:
 
@@ -91,3 +95,20 @@ COMPOSE_PROJECT_NAME=snapcall-test pnpm --filter @snapcall/infra-local infra:dow
 
 CI uses the same Compose configuration on port `5433` and removes its own test
 volume afterward. Do not point integration tests at a production database.
+
+## Container build
+
+Following Goho, the deployable server artifact is a container image:
+
+```bash
+pnpm turbo run build image
+```
+
+The image task uses Docker Buildx, Turbo prune, and a frozen production dependency
+install. It tags the image with `GITHUB_SHA` or the current Git commit, and loads
+it into local Docker. `SNAPCALL_IMAGE_REGISTRY` defaults to `ghcr.io/adamaho`;
+this command does not publish the image.
+
+The image runs as the `node` user on port `13000`. Supply `DATABASE_URL` when
+running it; its entry point runs migrations before starting the server. Local
+watch mode continues to use port `3001`. Production deployment is a separate step.

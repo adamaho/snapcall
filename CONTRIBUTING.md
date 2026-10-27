@@ -51,13 +51,14 @@ Useful focused commands:
 - `pnpm fmt` formats the repository
 - `pnpm fmt:check` checks formatting without writing changes
 - `pnpm lint` runs package lint tasks through Turbo
-- `pnpm turbo run test:unit` runs package unit test tasks through Turbo
+- `pnpm test:unit` runs package unit test tasks through Turbo
 - `pnpm tsc` runs package TypeScript tasks through Turbo
 
 ## Workspace Layout
 
 Use the existing top-level workspace directories consistently:
 
+- `clients/*` for typed clients derived from a program's shared API contract
 - `programs/*` for deployable applications, APIs, workers, and other executables
 - `packages/*` for shared features, reusable libraries, and external service clients
 - `tools/*` for internal tooling packages
@@ -96,9 +97,7 @@ import { receiptFixture } from "#test/fixtures/receipt.ts";
 ```
 
 Replace parent-directory imports such as `../` and `../../` with these aliases.
-Same-directory `./` imports may remain. The root lint config enforces this
-convention with `import/no-relative-parent-imports` using the pinned Nopeus
-version. Keep inter-package imports on workspace package names and their public
+Same-directory `./` imports may remain. Package lint configs inherit this convention from the pinned Nopeus preset. Keep inter-package imports on workspace package names and their public
 `exports`; aliases are private to the package declaring them. Do not introduce
 TypeScript-only `paths` mappings or duplicate aliases in test/bundler config.
 
@@ -135,27 +134,11 @@ installation.
 Keep the strict 24-hour minimum release age enabled, including for Effect
 packages. All packages under the `@adamaho` scope are excluded.
 
-The root Oxlint configuration inherits the Nopeus Effect preset. Spacing around
+Package Oxlint configurations inherit the Nopeus Effect preset. Spacing around
 Schema declarations, service methods, and Layer construction is enforced by
 `nopeus/require-effect-construction-spacing`. When copying older configuration,
 replace `nopeus/require-schema-group-spacing` and
 `nopeus/require-service-method-spacing` overrides with this single rule.
-
-## Changesets
-
-Add a changeset when a pull request changes the public behavior of a publishable
-package:
-
-```bash
-pnpm changeset
-```
-
-Select every affected package, choose the appropriate semantic version bump,
-and commit the generated `.changeset/*.md` file with the change.
-
-A changeset is not required for documentation, infrastructure,
-application-only, or private-package changes. Run `pnpm changeset:status` to
-inspect pending releases.
 
 ## Documentation Comments
 
@@ -213,7 +196,7 @@ pnpm check
 
 ## CI and repository access
 
-The default branch is `dev`. Pushes to `dev` and pull requests targeting `dev`
+The default branch is `dev`. Pushes to `dev` and pull requests
 run `.github/workflows/pr.yaml`: formatting, lint, TypeScript, unit tests,
 integration tests, and builds. Pull requests also run the title check.
 The shared Node.js and pnpm setup follows Goho and uses this repository's
@@ -222,9 +205,14 @@ versions and frozen lockfile.
 The API and server now run lint and TypeScript checks. Server unit tests verify
 HTTP behavior; integration tests use an isolated PostgreSQL schema and the real
 migrator. CI also checks that the committed OpenAPI contract is current.
-Android, container builds, and deployment will be added with those components.
-The build job still has no build tasks: Node.js runs the server TypeScript
-directly, following Goho.
+The build job uses Docker Buildx and `pnpm turbo run build image`, following Goho.
+The server image runs migrations before starting the HTTP process. Android checks
+and production deployment will be added with those components.
+
+The workflow and test setup follow Goho `dev` at `eacb2535`: separate unit and
+integration jobs, package-owned Vitest configuration, a typed client under
+`clients/snapcall-server`, and shared PostgreSQL infrastructure under `packages/core`.
+Snapcall names and local ports differ; the Android job is omitted until the app exists.
 
 The [dev ruleset](https://github.com/adamaho/snapcall/rules/25924857) restricts
 branch updates, including pull request merges, to `adamaho`. That account has

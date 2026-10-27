@@ -5,8 +5,6 @@ on:
     branches:
       - dev
   pull_request:
-    branches:
-      - dev
     types:
       - opened
       - synchronize
@@ -15,6 +13,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: pr-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -103,7 +102,7 @@ jobs:
         uses: ./.github/actions/setup-pnpm
 
       - name: Unit tests
-        run: pnpm turbo run test:unit
+        run: pnpm test:unit
 
   test-integration:
     name: test-integration
@@ -156,5 +155,9 @@ jobs:
       - name: Setup pnpm and install
         uses: ./.github/actions/setup-pnpm
 
-      - name: Build
-        run: pnpm turbo run build
+      # Packages opt into container builds with an image task.
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build packages and images
+        run: pnpm turbo run build image

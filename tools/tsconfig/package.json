@@ -8,9 +8,8 @@
   },
   "exports": {
     "./base": "./src/base.json",
-    "./service": "./src/service.json",
-    "./app-vite": "./src/app-vite.json",
-    "./program": "./src/program.json"
+    "./program": "./src/program.json",
+    "./app-vite": "./src/app-vite.json"
   },
   "scripts": {
     "clean": "rimraf node_modules dist build .turbo coverage",

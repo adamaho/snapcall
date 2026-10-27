@@ -27,13 +27,16 @@ Swagger UI is at `/docs`; the generated contract is at `/openapi.json`.
 
 ## Workspace
 
+- `clients/snapcall-server`: typed Effect client used by HTTP tests and consumers.
+- `packages/core`: shared PostgreSQL layers and pool integration tests.
 - `packages/snapcall-api`: shared Effect API contract and response schemas.
 - `programs/snapcall-server`: HTTP implementation, runtime, migrations, and tests.
 - `infra/local`: isolated local PostgreSQL Compose project.
 - `tools/tsconfig`: shared TypeScript configuration.
 
 Run `pnpm check` for formatting, lint, type checks, HTTP unit tests, and OpenAPI
-drift checks. Database tests need PostgreSQL and `TEST_DATABASE_URL`; see the
+drift checks. CI also builds the server container using `pnpm turbo run build image`.
+Database tests need PostgreSQL and `TEST_DATABASE_URL`; see the
 [server contributor guide](programs/snapcall-server/CONTRIBUTING.md).
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for repository conventions and

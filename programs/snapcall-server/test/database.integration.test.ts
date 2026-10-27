@@ -1,22 +1,18 @@
-import { NodeServices } from "@effect/platform-node";
+import { NodeCrypto, NodeServices } from "@effect/platform-node";
 import { PgMigrator } from "@effect/sql-pg";
-import { expect, it } from "@effect/vitest";
-import { Config, ConfigProvider, Context, Crypto, Effect, Exit, Layer, Redacted } from "effect";
+import { it } from "@effect/vitest";
+import { Postgres } from "@snapcall/core";
+import { Config, Context, Crypto, Effect, Exit, Layer, Redacted } from "effect";
 import { SqlClient } from "effect/sql";
+import { expect } from "vitest";
 
-import * as Database from "#src/database/client.ts";
 import * as Migrations from "#src/database/migrations.ts";
 
-const databaseAt = (url: string) =>
-  Database.layer.pipe(
-    Layer.provide(ConfigProvider.layer(ConfigProvider.fromUnknown({ DATABASE_URL: url }))),
-  );
-
 // Each test owns a schema and pool; closing the pool precedes dropping its schema.
-const TestDatabase = Layer.effectContext(
+const DatabaseLive = Layer.effectContext(
   Effect.gen(function* () {
     const url = yield* Config.Redacted("TEST_DATABASE_URL");
-    const adminContext = yield* Layer.build(databaseAt(Redacted.value(url)));
+    const adminContext = yield* Layer.build(Postgres.layer({ url }));
     const admin = Context.get(adminContext, SqlClient.SqlClient);
     const crypto = yield* Crypto.Crypto;
     const schema = `test_${(yield* crypto.randomUUIDv4()).replaceAll("-", "")}`;
@@ -26,9 +22,9 @@ const TestDatabase = Layer.effectContext(
     const testUrl = new URL(Redacted.value(url));
     const options = testUrl.searchParams.get("options") ?? "";
     testUrl.searchParams.set("options", `${options} -c search_path=${schema}`.trim());
-    return yield* Layer.build(databaseAt(testUrl.toString()));
+    return yield* Layer.build(Postgres.layer({ url: Redacted.make(testUrl.toString()) }));
   }),
-).pipe(Layer.provideMerge(NodeServices.layer));
+).pipe(Layer.provide(NodeCrypto.layer));
 
 const createFixture = Effect.gen(function* () {
   const sql = yield* SqlClient.SqlClient;
@@ -50,7 +46,7 @@ it.effect("initializes only the migration ledger and can run again", () =>
       yield* sql`SELECT tablename FROM pg_tables WHERE schemaname = current_schema() ORDER BY tablename`,
     ).toEqual([{ tablename: "snapcall_migrations" }]);
     expect(yield* sql`SELECT migration_id, name FROM snapcall_migrations`).toEqual([]);
-  }).pipe(Effect.provide(TestDatabase)),
+  }).pipe(Effect.provide([DatabaseLive, NodeServices.layer])),
 );
 
 it.effect("applies ordered migrations once and records their identities", () =>
@@ -77,7 +73,7 @@ it.effect("applies ordered migrations once and records their identities", () =>
       { migration_id: 1, name: "create_fixture" },
       { migration_id: 2, name: "update_fixture" },
     ]);
-  }).pipe(Effect.provide(TestDatabase)),
+  }).pipe(Effect.provide([DatabaseLive, NodeServices.layer])),
 );
 
 it.effect("rolls back a failed migration batch and permits a corrected retry", () =>
@@ -117,5 +113,5 @@ it.effect("rolls back a failed migration batch and permits a corrected retry", (
     expect(yield* sql`SELECT id, value FROM migration_fixture`).toEqual([
       { id: 1, value: "updated" },
     ]);
-  }).pipe(Effect.provide(TestDatabase)),
+  }).pipe(Effect.provide([DatabaseLive, NodeServices.layer])),
 );

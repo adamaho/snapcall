@@ -6,7 +6,6 @@ Shared TypeScript configurations for this Turborepo.
 
 - `@snapcall/tool-tsconfig/base`: strict baseline compiler defaults.
 - `@snapcall/tool-tsconfig/program`: NodeNext defaults and Effect diagnostics.
-- `@snapcall/tool-tsconfig/service`: equivalent service preset retained from the template.
 - `@snapcall/tool-tsconfig/app-vite`: bundler and React defaults for Vite workspaces.
 
 The presets extend `@adamaho/nopeus-tsconfig` from the workspace catalog.
@@ -30,7 +29,7 @@ TypeScript compiler with the catalog's `@effect/tsgo` version via this package's
 }
 ```
 
-The `program`, `service`, and `app-vite` presets resolve package-local aliases from `package.json`.
+The `program` and `app-vite` presets resolve package-local aliases from `package.json`.
 Use imports such as `#src/billing/calculate-total.ts` with explicit TypeScript
 extensions. Add `#test/*` only when a `test` folder exists. See the
 [package import conventions](../../CONTRIBUTING.md#package-imports) for tests,
