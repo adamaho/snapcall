@@ -6,7 +6,7 @@ The approved designs live on the [Snapcall art board](https://claude.ai/artifact
 
 - **Puzzle · Table view**: the hand-strength puzzle in its question state. It is interactive on the art board, so tapping an answer shows the right or wrong state.
 - **Puzzle · Wrong answer** and **Puzzle · Right answer**: the same screen after a wrong and a right answer, with the `VerdictPanel` open.
-- **First round · Tutorial**: the three-step intro shown before a player's first round. Tap Next on the art board to step through it.
+- **First-round tutorial** row: one board per step (The table, Find your best hand, Misses come back). Step 1 is interactive; tap Next to step through.
 - **Round complete · Stars**: the end-of-round screen at two stars. The board's Tweaks switch it between one, two and three stars.
 - **Brand · Broadcast**: the palette, type, parts and principles on one sheet.
 
