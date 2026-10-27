@@ -100,7 +100,7 @@ private fun sans(weight: FontWeight, size: Int, lineHeight: Int, tracking: Doubl
 // Chip and label text is rendered in caps by the components; everything else is sentence case.
 @Immutable
 data class SnapcallTypography(
-    val prompt: TextStyle,
+    val title: TextStyle,
     val score: TextStyle,
     val verdict: TextStyle,
     val handName: TextStyle,
@@ -116,7 +116,7 @@ data class SnapcallTypography(
 
 val SnapcallType =
     SnapcallTypography(
-        prompt = sans(FontWeight.Bold, 32, 35, -0.02),
+        title = sans(FontWeight.Bold, 30, 33, -0.02),
         score = sans(FontWeight.Bold, 88, 80, -0.04),
         verdict = sans(FontWeight.Bold, 22, 44),
         handName = sans(FontWeight.SemiBold, 16, 30),
@@ -171,7 +171,7 @@ object SnapcallMotion {
     const val dealMillis = 420
     val dealDelaysMillis = listOf(100, 180, 260, 500, 740) // flop, flop, flop, turn, river
     val holeDealDelaysMillis = listOf(950, 1050)
-    const val plateWipeMillis = 350
+    const val tutorialStepMillis = 300
     const val verdictSlideMillis = 320
     const val cardFadeMillis = 250
     const val fadedCardAlpha = 0.28f

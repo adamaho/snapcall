@@ -23,7 +23,7 @@ Blue and orange were chosen over green and red so colorblind players can tell th
 
 ## Component names
 
-Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`, `Plate`, `PlateChain`, `ModuleBreadcrumb`, `RoundProgress`, `CloseButton`, `PokerTable`, `StreetLabels`, `HandPlate`, `AnswerButton`, `AnswerGrid`, `ActionButton`, `VerdictPanel`, `StarRow` and `HandRecapRow`. Use the same convention for component-specific types (`AnswerState`, `PlateColor`) and matching filenames. See [references/components.md](references/components.md).
+Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`, `Plate`, `PlateChain`, `ModuleBreadcrumb`, `RoundProgress`, `CloseButton`, `PokerTable`, `StreetLabels`, `AnswerButton`, `AnswerGrid`, `ActionButton`, `VerdictPanel`, `StarRow` and `HandRecapRow`. Use the same convention for component-specific types (`AnswerState`, `PlateColor`) and matching filenames. See [references/components.md](references/components.md).
 
 ## Typography
 
@@ -73,7 +73,7 @@ The product decisions so far, which the specs follow:
 
 ## Definition of done
 
-- Every state in `screens.md` renders: question, right, wrong, and the round-complete screen at 1, 2 and 3 stars.
+- Every state in `screens.md` renders: the three tutorial steps, question, right, wrong, and the round-complete screen at 1, 2 and 3 stars.
 - Every colored element is `right`, `wrong`, `suitRed` or a card. Everything else is gray or white.
 - No Material ripple appears anywhere.
 - Text contrast is at least 4.5:1, using the measured pairs in `tokens.md`.

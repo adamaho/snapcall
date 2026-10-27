@@ -40,10 +40,10 @@ Contrast, measured from the opaque sRGB pairs:
 
 | Style        | Family               | Size / line height | Tracking | Use                                       |
 | ------------ | -------------------- | ------------------ | -------- | ----------------------------------------- |
-| `prompt`     | Geist 700            | 32 / 35            | −0.02em  | Puzzle question, sentence case, centered  |
+| `title`      | Geist 700            | 30 / 33            | −0.02em  | Tutorial step titles, sentence case       |
 | `score`      | Geist 700            | 88 / 80            | −0.04em  | Round-complete score                      |
 | `verdict`    | Geist 700            | 20 / 36            | 0        | Wrong verdict plate, sentence case        |
-| `handName`   | Geist 600            | 16 / 30            | 0        | Hand plate after an answer, recap rows    |
+| `handName`   | Geist 600            | 16 / 30            | 0        | Hand names in recap rows                  |
 | `answer`     | Geist 600            | 18 / 24            | 0        | Answer buttons, sentence case             |
 | `button`     | Geist 600            | 16 / 24            | 0        | Action buttons, sentence case             |
 | `breadcrumb` | Geist 500            | 14 / 20            | 0        | Header breadcrumb, sentence case          |
@@ -83,15 +83,15 @@ Use tabular figures for scores, counts and odds so numbers do not shift while an
 
 Ease out with `cubic-bezier(0.2, 0.8, 0.2, 1)` unless noted. With "Remove animations" on, every animation snaps to its end state.
 
-| Motion          | Duration | Delay                                                           | Notes                                          |
-| --------------- | -------- | --------------------------------------------------------------- | ---------------------------------------------- |
-| Deal-in         | 420ms    | Flop 100, 180, 260ms; turn 500ms; river 740ms; hole 950, 1050ms | From 36dp above, 92% scale, transparent        |
-| Hand plate wipe | 350ms    | 150ms after the answer                                          | Left-to-right reveal                           |
-| Verdict slide   | 320ms    | On answer                                                       | Rises 24dp and fades in                        |
-| Verdict plate   | 400ms    | 120ms                                                           | Left-to-right wipe                             |
-| Card fade       | 250ms    | On answer                                                       | Unused board cards fade to 28%                 |
-| Press           | spring   | —                                                               | Moves down 2dp, fill 12% brighter              |
-| Progress pulse  | 1.6s     | Looping                                                         | Current segment only, opacity 100% to 45%      |
-| Star pop        | 500ms    | 250ms, then every 220ms                                         | Scale from 0 with −30° turn, overshoot to 118% |
-| Recap rows      | 300ms    | 1.3s, then every 70ms                                           | Slide in 24dp from the left                    |
-| Pass plate      | 450ms    | 1.2s                                                            | Left-to-right wipe                             |
+| Motion         | Duration | Delay                                                           | Notes                                          |
+| -------------- | -------- | --------------------------------------------------------------- | ---------------------------------------------- |
+| Deal-in        | 420ms    | Flop 100, 180, 260ms; turn 500ms; river 740ms; hole 950, 1050ms | From 36dp above, 92% scale, transparent        |
+| Verdict slide  | 320ms    | On answer                                                       | Rises 24dp and fades in                        |
+| Tutorial step  | 300ms    | On Next                                                         | Slides in 24dp from the right                  |
+| Verdict plate  | 400ms    | 120ms                                                           | Left-to-right wipe                             |
+| Card fade      | 250ms    | On answer                                                       | Unused board cards fade to 28%                 |
+| Press          | spring   | —                                                               | Moves down 2dp, fill 12% brighter              |
+| Progress pulse | 1.6s     | Looping                                                         | Current segment only, opacity 100% to 45%      |
+| Star pop       | 500ms    | 250ms, then every 220ms                                         | Scale from 0 with −30° turn, overshoot to 118% |
+| Recap rows     | 300ms    | 1.3s, then every 70ms                                           | Slide in 24dp from the left                    |
+| Pass plate     | 450ms    | 1.2s                                                            | Left-to-right wipe                             |

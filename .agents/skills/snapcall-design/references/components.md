@@ -39,11 +39,6 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - `StreetLabels` sit 30dp from the top of the table, above the board, in `label` style and `textMuted`, each underlined with a 2dp `outline` rule. FLOP spans the first three card columns; TURN and RIVER span one each.
 - The board row is centered 54dp from the top. The two hole cards are centered 148dp from the top, so they overlap the table's lower edge like the player's seat.
 
-## HandPlate
-
-- Centered below the table: a light `YOU` plate chained to a surface plate.
-- Before an answer, the surface plate shows `?` in `textPrimary`. After an answer, it shows the hand name in `handName` style and `right`, revealed with the plate wipe.
-
 ## AnswerButton and AnswerGrid
 
 - `AnswerGrid` is a 2×2 grid of four `AnswerButton`s with 10dp gaps. Answers are lettered A to D in reading order.
