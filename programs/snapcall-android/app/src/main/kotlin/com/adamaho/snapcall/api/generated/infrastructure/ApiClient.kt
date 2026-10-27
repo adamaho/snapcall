@@ -1,5 +1,6 @@
 package com.adamaho.snapcall.api.generated.infrastructure
 
+import com.adamaho.snapcall.api.generated.auth.HttpBearerAuth
 
 import okhttp3.Call
 import okhttp3.Interceptor
@@ -57,6 +58,41 @@ class ApiClient(
 
     init {
         normalizeBaseUrl()
+    }
+
+    constructor(
+        baseUrl: String = defaultBasePath,
+        okHttpClientBuilder: OkHttpClient.Builder? = null,
+        serializerBuilder: Moshi.Builder = Serializer.moshiBuilder,
+        authNames: Array<String>
+    ) : this(baseUrl, okHttpClientBuilder, serializerBuilder) {
+        authNames.forEach { authName ->
+            val auth: Interceptor? = when (authName) { 
+                "bearer" -> HttpBearerAuth("Bearer")
+                
+                else -> throw RuntimeException("auth name $authName not found in available auth names")
+            }
+            if (auth != null) {
+                addAuthorization(authName, auth)
+            }
+        }
+    }
+
+    constructor(
+        baseUrl: String = defaultBasePath,
+        okHttpClientBuilder: OkHttpClient.Builder? = null,
+        serializerBuilder: Moshi.Builder = Serializer.moshiBuilder,
+        authName: String,
+        bearerToken: String
+    ) : this(baseUrl, okHttpClientBuilder, serializerBuilder, arrayOf(authName)) {
+        setBearerToken(bearerToken)
+    }
+
+    fun setBearerToken(bearerToken: String): ApiClient {
+        apiAuthorizations.values.runOnFirst<Interceptor, HttpBearerAuth> {
+            this.bearerToken = bearerToken
+        }
+        return this
     }
 
     /**

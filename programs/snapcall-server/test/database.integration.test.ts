@@ -1,30 +1,12 @@
-import { NodeCrypto, NodeServices } from "@effect/platform-node";
+import { NodeServices } from "@effect/platform-node";
 import { PgMigrator } from "@effect/sql-pg";
 import { it } from "@effect/vitest";
-import { Postgres } from "@snapcall/core";
-import { Config, Context, Crypto, Effect, Exit, Layer, Redacted } from "effect";
+import { Effect, Exit } from "effect";
 import { SqlClient } from "effect/sql";
 import { expect } from "vitest";
 
 import * as Migrations from "#src/database/migrations.ts";
-
-// Each test owns a schema and pool; closing the pool precedes dropping its schema.
-const DatabaseLive = Layer.effectContext(
-  Effect.gen(function* () {
-    const url = yield* Config.Redacted("TEST_DATABASE_URL");
-    const adminContext = yield* Layer.build(Postgres.layer({ url }));
-    const admin = Context.get(adminContext, SqlClient.SqlClient);
-    const crypto = yield* Crypto.Crypto;
-    const schema = `test_${(yield* crypto.randomUUIDv4()).replaceAll("-", "")}`;
-    yield* Effect.acquireRelease(admin`CREATE SCHEMA ${admin(schema)}`, () =>
-      admin`DROP SCHEMA ${admin(schema)} CASCADE`.pipe(Effect.orDie),
-    );
-    const testUrl = new URL(Redacted.value(url));
-    const options = testUrl.searchParams.get("options") ?? "";
-    testUrl.searchParams.set("options", `${options} -c search_path=${schema}`.trim());
-    return yield* Layer.build(Postgres.layer({ url: Redacted.make(testUrl.toString()) }));
-  }),
-).pipe(Layer.provide(NodeCrypto.layer));
+import { layer as DatabaseLive } from "#test/database.ts";
 
 const createFixture = Effect.gen(function* () {
   const sql = yield* SqlClient.SqlClient;
@@ -37,15 +19,22 @@ const updateFixture = Effect.gen(function* () {
   yield* sql`UPDATE migration_fixture SET value = 'updated' WHERE id = 1`;
 });
 
-it.effect("initializes only the migration ledger and can run again", () =>
+it.effect("creates the game tables and can run again", () =>
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient;
-    expect(yield* Migrations.run()).toEqual([]);
+    expect(yield* Migrations.run()).toEqual([[1, "rounds"]]);
     expect(yield* Migrations.run()).toEqual([]);
     expect(
       yield* sql`SELECT tablename FROM pg_tables WHERE schemaname = current_schema() ORDER BY tablename`,
-    ).toEqual([{ tablename: "snapcall_migrations" }]);
-    expect(yield* sql`SELECT migration_id, name FROM snapcall_migrations`).toEqual([]);
+    ).toEqual([
+      { tablename: "players" },
+      { tablename: "round_answers" },
+      { tablename: "round_attempts" },
+      { tablename: "snapcall_migrations" },
+    ]);
+    expect(yield* sql`SELECT migration_id, name FROM snapcall_migrations`).toEqual([
+      { migration_id: 1, name: "rounds" },
+    ]);
   }).pipe(Effect.provide([DatabaseLive, NodeServices.layer])),
 );
 

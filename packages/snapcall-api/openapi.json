@@ -3,7 +3,7 @@
   "info": {
     "title": "Snapcall API",
     "version": "0.0.0",
-    "description": "The shared HTTP contract for the Snapcall server."
+    "description": "Anonymous players and five-puzzle Hand Strength rounds."
   },
   "paths": {
     "/health": {
@@ -34,10 +34,590 @@
         "description": "Confirms the server is running without querying the database or external services.",
         "summary": "Check server liveness"
       }
+    },
+    "/players": {
+      "post": {
+        "tags": ["players"],
+        "operationId": "players.create",
+        "parameters": [],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PlayerCredentials"
+                    }
+                  },
+                  "required": ["data"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The server could not complete the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "description": "Creates an anonymous player and returns a bearer token. Retain the token for future round requests.",
+        "summary": "Create an anonymous player"
+      }
+    },
+    "/rounds/hand-strength/attempts": {
+      "post": {
+        "tags": ["rounds"],
+        "operationId": "rounds.start",
+        "parameters": [],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RoundAttempt"
+                    }
+                  },
+                  "required": ["data"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "A valid anonymous player bearer token is required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The server could not complete the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "description": "A new request ID creates five fresh seven-card deals. Repeating the same player's request ID returns the existing attempt without creating another.",
+        "summary": "Start or replay the Hand Strength round",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartAttempt"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/round-attempts/{attemptId}": {
+      "get": {
+        "tags": ["rounds"],
+        "operationId": "rounds.get",
+        "parameters": [
+          {
+            "name": "attemptId",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/AttemptId"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RoundAttempt"
+                    }
+                  },
+                  "required": ["data"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "A valid anonymous player bearer token is required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "This player has no attempt with the requested ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoundNotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The server could not complete the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns the current puzzle or completed result for an attempt owned by the authenticated player. Solutions are not included.",
+        "summary": "Get current round progress or results"
+      }
+    },
+    "/round-attempts/{attemptId}/answers": {
+      "post": {
+        "tags": ["rounds"],
+        "operationId": "rounds.answer",
+        "parameters": [
+          {
+            "name": "attemptId",
+            "in": "path",
+            "schema": {
+              "$ref": "#/components/schemas/AttemptId"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AnswerResult"
+                    }
+                  },
+                  "required": ["data"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "A valid anonymous player bearer token is required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "This player has no attempt with the requested ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoundNotFound"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The answer conflicts with the current attempt state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoundConflict"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The server could not complete the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "description": "Accepts five distinct cards from the current puzzle and returns immediate feedback with the next puzzle or final result. Any selection tied with the strongest hand is correct. Repeating the same cards in any order returns the original feedback and the latest state without scoring twice. Cards not dealt in the puzzle, a different selection for an answered puzzle, or an out-of-order puzzle returns 409.",
+        "summary": "Answer the current puzzle",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitAnswer"
+              }
+            }
+          },
+          "required": true
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "InternalServerError": {
+        "type": "object",
+        "properties": {
+          "_tag": {
+            "type": "string",
+            "enum": ["InternalServerError"]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["_tag", "message"],
+        "additionalProperties": false
+      },
+      "Unauthorized": {
+        "type": "object",
+        "properties": {
+          "_tag": {
+            "type": "string",
+            "enum": ["Unauthorized"]
+          }
+        },
+        "required": ["_tag"],
+        "additionalProperties": false
+      },
+      "RoundConflict": {
+        "type": "object",
+        "properties": {
+          "_tag": {
+            "type": "string",
+            "enum": ["RoundConflict"]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["_tag", "message"],
+        "additionalProperties": false
+      },
+      "RoundNotFound": {
+        "type": "object",
+        "properties": {
+          "_tag": {
+            "type": "string",
+            "enum": ["RoundNotFound"]
+          },
+          "id": {
+            "$ref": "#/components/schemas/AttemptId"
+          }
+        },
+        "required": ["_tag", "id"],
+        "additionalProperties": false
+      },
+      "AttemptId": {
+        "type": "string",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$",
+        "format": "uuid"
+      },
+      "AnswerResult": {
+        "type": "object",
+        "properties": {
+          "feedback": {
+            "$ref": "#/components/schemas/AnswerFeedback"
+          },
+          "attempt": {
+            "$ref": "#/components/schemas/RoundAttempt"
+          }
+        },
+        "required": ["feedback", "attempt"],
+        "additionalProperties": false
+      },
+      "RoundAttempt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/AttemptId"
+          },
+          "roundId": {
+            "type": "string",
+            "enum": ["hand-strength"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["in-progress", "completed"]
+          },
+          "answeredCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "stars": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Null until all five answers are accepted."
+          },
+          "bestScore": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "bestStars": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "puzzle": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Puzzle"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The next puzzle, or null when complete."
+          }
+        },
+        "required": [
+          "id",
+          "roundId",
+          "status",
+          "answeredCount",
+          "score",
+          "stars",
+          "bestScore",
+          "bestStars",
+          "puzzle"
+        ],
+        "additionalProperties": false
+      },
+      "Puzzle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/PuzzleId"
+          },
+          "position": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "holeCards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "board": {
+            "$ref": "#/components/schemas/Board"
+          }
+        },
+        "required": ["id", "position", "holeCards", "board"],
+        "additionalProperties": false
+      },
+      "Board": {
+        "type": "object",
+        "properties": {
+          "flop": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "turn": {
+            "$ref": "#/components/schemas/Card"
+          },
+          "river": {
+            "$ref": "#/components/schemas/Card"
+          }
+        },
+        "required": ["flop", "turn", "river"],
+        "additionalProperties": false
+      },
+      "Card": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "string",
+            "enum": ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
+          },
+          "suit": {
+            "type": "string",
+            "enum": ["clubs", "diamonds", "hearts", "spades"]
+          }
+        },
+        "required": ["rank", "suit"],
+        "additionalProperties": false
+      },
+      "PuzzleId": {
+        "type": "string",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$",
+        "format": "uuid"
+      },
+      "AnswerFeedback": {
+        "type": "object",
+        "properties": {
+          "puzzleId": {
+            "$ref": "#/components/schemas/PuzzleId"
+          },
+          "selectedCards": {
+            "$ref": "#/components/schemas/SelectedCards"
+          },
+          "bestCards": {
+            "$ref": "#/components/schemas/SelectedCards"
+          },
+          "selectedHandType": {
+            "$ref": "#/components/schemas/HandType"
+          },
+          "bestHandType": {
+            "$ref": "#/components/schemas/HandType"
+          },
+          "correct": {
+            "type": "boolean"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "puzzleId",
+          "selectedCards",
+          "bestCards",
+          "selectedHandType",
+          "bestHandType",
+          "correct",
+          "explanation"
+        ],
+        "additionalProperties": false,
+        "description": "bestCards repeats the accepted selection when it is correct; otherwise it is one strongest five-card hand."
+      },
+      "HandType": {
+        "type": "string",
+        "enum": [
+          "high-card",
+          "one-pair",
+          "two-pair",
+          "three-of-a-kind",
+          "straight",
+          "flush",
+          "full-house",
+          "four-of-a-kind",
+          "straight-flush"
+        ]
+      },
+      "SelectedCards": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Card"
+        },
+        "minItems": 5,
+        "maxItems": 5,
+        "uniqueItems": true
+      },
+      "SubmitAnswer": {
+        "type": "object",
+        "properties": {
+          "puzzleId": {
+            "$ref": "#/components/schemas/PuzzleId"
+          },
+          "selectedCards": {
+            "$ref": "#/components/schemas/SelectedCards"
+          }
+        },
+        "required": ["puzzleId", "selectedCards"],
+        "additionalProperties": false
+      },
+      "StartAttempt": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$",
+            "format": "uuid"
+          }
+        },
+        "required": ["requestId"],
+        "additionalProperties": false
+      },
+      "PlayerCredentials": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "$ref": "#/components/schemas/PlayerId"
+          },
+          "token": {
+            "type": "string",
+            "description": "Save this bearer token to access this player's rounds on future requests."
+          }
+        },
+        "required": ["playerId", "token"],
+        "additionalProperties": false
+      },
+      "PlayerId": {
+        "type": "string",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|[fF]{8}-[fF]{4}-[fF]{4}-[fF]{4}-[fF]{12})$",
+        "format": "uuid"
+      },
       "HealthData": {
         "type": "object",
         "properties": {
@@ -57,13 +637,26 @@
         ]
       }
     },
-    "securitySchemes": {}
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "Bearer"
+      }
+    }
   },
   "security": [],
   "tags": [
     {
       "name": "health",
       "description": "Server liveness."
+    },
+    {
+      "name": "players",
+      "description": "Anonymous installation credentials."
+    },
+    {
+      "name": "rounds",
+      "description": "Five-puzzle Hand Strength attempts: choose the strongest five of seven cards."
     }
   ]
 }
