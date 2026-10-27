@@ -1,6 +1,7 @@
 node_modules/
 .turbo/
 .vite/
+*.tsbuildinfo
 
 dist/
 build/
@@ -23,3 +24,6 @@ dist-ssr/
 .output/
 .vinxi/
 __unconfig*
+
+.secrets
+.data/

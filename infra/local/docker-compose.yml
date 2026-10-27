@@ -1,18 +1,17 @@
-name: monorepo-local
+name: snapcall-local
 
 services:
   postgres:
-    image: postgres:16-alpine
-    container_name: monorepo-local-postgres
+    image: postgres:18-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: monorepo
-      POSTGRES_USER: monorepo
-      POSTGRES_PASSWORD: monorepo
+      POSTGRES_DB: snapcall
+      POSTGRES_USER: snapcall
+      POSTGRES_PASSWORD: snapcall
     ports:
-      - "5432:5432"
+      - "127.0.0.1:${SNAPCALL_POSTGRES_PORT:-5435}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s

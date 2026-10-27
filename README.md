@@ -1,39 +1,43 @@
-# monorepo
+# Snapcall
 
-`monorepo` is a template repository for starting future projects with a shared
-development environment and project structure.
+Android-first poker puzzles, built on a pnpm workspace with Effect. The current
+foundation includes the shared HTTP API contract, Node.js server, PostgreSQL
+setup, migrations, and automated checks.
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow,
-verification commands, workspace conventions, and commit guidelines.
+## Start the server
 
-## Prerequisites
-
-Before developing in this repository, install:
-
-- [Node.js](https://nodejs.org/en/download) 24, matching `engines.node` in `package.json`
-- [pnpm](https://pnpm.io/installation) at the version pinned in `packageManager`
-- [Docker with Compose](https://docs.docker.com/get-docker/) when using local services
-
-## Usage
-
-Use this prompt with your coding agent to configure the template for a new
-project:
-
-```text
-Configure this repository for a new project. Rename the project from `monorepo`
-to the new project name, update package names, documentation, configuration
-files, and references across the repo. Preserve the existing pnpm workspace
-and optional Docker services unless a change is required for the new project.
-```
-
-## Development
-
-Follow the [development setup](./CONTRIBUTING.md#development-setup) to install
-the required tools, then run from the repository root:
+Use Node.js and pnpm at the versions in `package.json`, plus Docker Compose:
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm check
+cp programs/snapcall-server/.env.example programs/snapcall-server/.env
+pnpm server:dev
 ```
 
-Coding agents use these same commands with Node.js and pnpm on `PATH`.
+This starts Snapcall's local Postgres on port `5435`, initializes the migration
+ledger, and starts the server on `127.0.0.1:3001`.
+
+```bash
+curl http://127.0.0.1:3001/health
+# {"data":{"status":"ok"}}
+```
+
+Swagger UI is at `/docs`; the generated contract is at `/openapi.json`.
+`/health` reports server liveness, not database readiness.
+
+## Workspace
+
+- `clients/snapcall-server`: typed Effect client used by HTTP tests and consumers.
+- `packages/core`: shared PostgreSQL layers and pool integration tests.
+- `packages/snapcall-api`: shared Effect API contract and response schemas.
+- `programs/snapcall-server`: HTTP implementation, runtime, migrations, and tests.
+- `infra/local`: isolated local PostgreSQL Compose project.
+- `tools/tsconfig`: shared TypeScript configuration.
+
+Run `pnpm check` for formatting, lint, type checks, HTTP unit tests, and OpenAPI
+drift checks. CI also builds the server container using `pnpm turbo run build image`.
+Database tests need PostgreSQL and `TEST_DATABASE_URL`; see the
+[server contributor guide](programs/snapcall-server/CONTRIBUTING.md).
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for repository conventions and
+[requirements](https://github.com/adamaho/snapcall/issues/1) for the game direction.

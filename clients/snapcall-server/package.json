@@ -1,0 +1,33 @@
+{
+  "name": "@snapcall/snapcall-server-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Typed Effect client for the Snapcall server API.",
+  "type": "module",
+  "imports": {
+    "#src/*": "./src/*"
+  },
+  "exports": {
+    "./client": "./src/client.ts",
+    "./response": "./src/response.ts"
+  },
+  "scripts": {
+    "clean": "rimraf node_modules dist build .turbo coverage",
+    "lint": "oxlint .",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@snapcall/snapcall-api": "workspace:*",
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@adamaho/nopeus-oxlint-config": "catalog:",
+    "@adamaho/nopeus-oxlint-plugin": "catalog:",
+    "@snapcall/tool-tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:"
+  }
+}

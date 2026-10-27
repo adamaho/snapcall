@@ -5,6 +5,12 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**"]
     },
+    "image": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "passThroughEnv": ["GITHUB_SHA", "SNAPCALL_IMAGE_REGISTRY"],
+      "outputs": []
+    },
     "transit": {
       "dependsOn": ["^transit"]
     },
@@ -22,12 +28,17 @@
     "fmt:check": {
       "outputs": []
     },
+    "openapi:check": {
+      "cache": false,
+      "outputs": []
+    },
     "clean": {
       "cache": false,
       "outputs": []
     },
     "infra:up": {
       "cache": false,
+      "env": ["COMPOSE_PROJECT_NAME", "SNAPCALL_POSTGRES_PORT"],
       "outputs": []
     },
     "infra:down": {
@@ -45,7 +56,13 @@
     },
     "db:create": {
       "cache": false,
-      "dependsOn": ["@monorepo/infra-local#infra:up"],
+      "dependsOn": ["@snapcall/infra-local#infra:up"],
+      "outputs": []
+    },
+    "db:migrate": {
+      "cache": false,
+      "dependsOn": ["@snapcall/infra-local#infra:up"],
+      "env": ["DATABASE_URL"],
       "outputs": []
     },
     "db:push": {
@@ -56,7 +73,13 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["transit" /* "db:push" */]
+      "dependsOn": ["transit"]
+    },
+    "@snapcall/snapcall-server#dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["transit", "db:migrate"],
+      "env": ["DATABASE_URL", "SNAPCALL_SERVER_HOST", "SNAPCALL_SERVER_PORT"]
     },
     "test:unit": {
       "dependsOn": ["transit"],
@@ -64,7 +87,8 @@
     },
     "test:integration": {
       "cache": false,
-      "dependsOn": ["transit", "db:create"],
+      "env": ["TEST_DATABASE_URL"],
+      "dependsOn": ["transit"],
       "outputs": []
     },
     "test:component": {

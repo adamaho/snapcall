@@ -1,0 +1,44 @@
+{
+  "name": "@snapcall/snapcall-server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "HTTP server for Snapcall.",
+  "type": "module",
+  "imports": {
+    "#src/*": "./src/*",
+    "#test/*": "./test/*"
+  },
+  "scripts": {
+    "clean": "rimraf node_modules dist build .turbo coverage",
+    "dev": "node --env-file-if-exists=.env --watch src/main.ts",
+    "start": "node --env-file-if-exists=.env src/main.ts",
+    "lint": "oxlint .",
+    "tsc": "tsc --noEmit",
+    "test:unit": "vitest run --project unit",
+    "openapi:generate": "node scripts/openapi.ts",
+    "openapi:check": "node scripts/openapi.ts --check",
+    "db:migrate": "node --env-file-if-exists=.env src/database/migrate.ts",
+    "test:integration": "vitest run --project integration",
+    "image": "node scripts/build-image.ts"
+  },
+  "dependencies": {
+    "@effect/platform-node": "catalog:",
+    "@effect/sql-pg": "catalog:",
+    "@snapcall/core": "workspace:*",
+    "@snapcall/snapcall-api": "workspace:*",
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@adamaho/nopeus-oxlint-config": "catalog:",
+    "@adamaho/nopeus-oxlint-plugin": "catalog:",
+    "@effect/vitest": "catalog:",
+    "@snapcall/snapcall-server-client": "workspace:*",
+    "@snapcall/tool-tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

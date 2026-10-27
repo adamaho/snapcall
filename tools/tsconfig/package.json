@@ -1,5 +1,5 @@
 {
-  "name": "@monorepo/tool-tsconfig",
+  "name": "@snapcall/tool-tsconfig",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -8,7 +8,7 @@
   },
   "exports": {
     "./base": "./src/base.json",
-    "./service": "./src/service.json",
+    "./program": "./src/program.json",
     "./app-vite": "./src/app-vite.json"
   },
   "scripts": {
