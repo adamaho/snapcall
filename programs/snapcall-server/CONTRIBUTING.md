@@ -71,8 +71,9 @@ uses the same explicit `PgMigrator.fromRecord` registry as Goho, in
 The registry includes `0001_rounds`, which creates:
 
 - `players`: anonymous player IDs and unique SHA-256 token hashes.
-- `round_attempts`: player-owned attempts, start request IDs, and five stored puzzles with private solutions.
-- `round_answers`: accepted answers, ordered and unique within an attempt.
+- `round_attempts`: player-owned Hand Strength attempts, start request IDs, and five stored seven-card deals.
+  No solutions are stored; the evaluator derives them from each deal.
+- `round_answers`: accepted five-card selections (`selected_cards` JSONB), ordered and unique within an attempt.
 
 Scores and completion are derived from accepted answers. The repository locks an
 owned attempt while checking and saving an answer, so concurrent submissions
@@ -99,15 +100,19 @@ pnpm check
 pnpm --filter @snapcall/snapcall-server test:unit
 ```
 
-Unit tests need no database. They cover HTTP liveness and docs, hand generation
-and classification, and scoring. Integration tests use real PostgreSQL and
-create a unique schema per test, dropping it when the test finishes.
+Unit tests need no database. They cover HTTP liveness and docs, deal generation,
+every hand category with kickers and ace-low straights, best-five selection from
+zero, one, or two hole cards, tied selections, feedback, and scoring.
+Integration tests use real PostgreSQL and create a unique schema per test,
+dropping it when the test finishes.
 
 Round integration tests run the real migration, HTTP routes, bearer authentication,
-and typed client. They verify player separation, hashed credentials, private
-solutions, repeated and concurrent starts/answers, conflicting or out-of-order
-answers, progress reloads, five-answer completion, stars, and best completed
-scores across replays. Migration checks cover the production tables, repeated
+and typed client. Fixed deals inserted through SQL check expected answers
+independently of the evaluator. They verify player separation, hashed
+credentials, solution-free puzzles, repeated and concurrent starts/answers,
+reordered retries, tied correct selections, malformed (400) and undealt (409)
+selections, conflicting or out-of-order answers, progress reloads, five-answer
+completion, stars, and best completed scores across replays. Migration checks cover the production tables, repeated
 runs, and transactional rollback with test fixtures. The core package also verifies
 that the SQL and Postgres services share one pool and reuse a connection.
 

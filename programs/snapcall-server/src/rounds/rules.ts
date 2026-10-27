@@ -1,5 +1,10 @@
-import { type AnswerFeedback, type Card, HandType, Puzzle } from "@snapcall/snapcall-api/rounds";
-import { Crypto, Effect, Schema } from "effect";
+import {
+  type AnswerFeedback,
+  type Card,
+  type HandType,
+  Puzzle,
+} from "@snapcall/snapcall-api/rounds";
+import { Array, Crypto, Effect, Schema } from "effect";
 
 const ranks: ReadonlyArray<Card["rank"]> = [
   "2",
@@ -18,108 +23,284 @@ const ranks: ReadonlyArray<Card["rank"]> = [
 ];
 const suits: ReadonlyArray<Card["suit"]> = ["clubs", "diamonds", "hearts", "spades"];
 const deck: ReadonlyArray<Card> = ranks.flatMap((rank) => suits.map((suit) => ({ rank, suit })));
-const handKey = (cards: ReadonlyArray<Card>) =>
-  cards
-    .map((card) => `${card.rank}:${card.suit}`)
-    .sort()
-    .join(",");
+const cardKey = (card: Card) => `${card.rank}:${card.suit}`;
+const rankValue = (card: Card) => ranks.indexOf(card.rank) + 2;
+const canonicalCards = (cards: ReadonlyArray<Card>): ReadonlyArray<Card> =>
+  [...cards].sort(
+    (left, right) =>
+      rankValue(right) - rankValue(left) || suits.indexOf(left.suit) - suits.indexOf(right.suit),
+  );
 
 /**
- * Recognizes only the two beginner hand categories; invalid or stronger hands return null.
+ * Compares selections by physical cards without depending on their submitted order.
  *
  * @category rules
  * @since 0.1.0
  */
-export const classify = (cards: ReadonlyArray<Card>): HandType | null => {
-  if (cards.length !== 5 || new Set(cards.map((card) => `${card.rank}:${card.suit}`)).size !== 5) {
-    return null;
-  }
-  const counts = new Map<Card["rank"], number>();
-  for (const card of cards) counts.set(card.rank, (counts.get(card.rank) ?? 0) + 1);
-  if (counts.size === 4) return "one-pair";
-  if (counts.size !== 5 || new Set(cards.map((card) => card.suit)).size === 1) return null;
-  const values = cards.map((card) => ranks.indexOf(card.rank) + 2).sort((a, b) => a - b);
-  const straight = values.every(
-    (value, index) => index === 0 || value === (values[index - 1] ?? 0) + 1,
+export const selectionKey = (cards: ReadonlyArray<Card>): string =>
+  cards.map(cardKey).sort().join(",");
+
+/**
+ * The seven available cards, in hole-card, flop, turn, and river order.
+ *
+ * @category rules
+ * @since 0.1.0
+ */
+export const cardsFor = (puzzle: Puzzle): ReadonlyArray<Card> => [
+  ...puzzle.holeCards,
+  ...puzzle.board.flop,
+  puzzle.board.turn,
+  puzzle.board.river,
+];
+
+/**
+ * Requires five distinct cards that were actually dealt in this puzzle.
+ *
+ * @category rules
+ * @since 0.1.0
+ */
+export const isSelectionFrom = (puzzle: Puzzle, cards: ReadonlyArray<Card>): boolean => {
+  const available = new Set(cardsFor(puzzle).map(cardKey));
+  return (
+    cards.length === 5 &&
+    new Set(cards.map(cardKey)).size === 5 &&
+    cards.every((card) => available.has(cardKey(card)))
   );
-  const aceLowStraight = values.join(",") === "2,3,4,5,14";
-  return straight || aceLowStraight ? null : "high-card";
 };
 
 /**
- * Internal puzzle shape; the solution is persisted but never included in a public puzzle.
- *
- * @category schemas
- * @since 0.1.0
- */
-export const StoredPuzzle = Schema.Struct({ ...Puzzle.fields, correctAnswer: HandType });
-
-/**
- * A generated puzzle and its private solution.
+ * A deal is sufficient to reproduce its solution; no private answer is persisted.
  *
  * @category models
  * @since 0.1.0
  */
-export interface StoredPuzzle extends Schema.Schema.Type<typeof StoredPuzzle> {}
+export type StoredPuzzle = Puzzle;
 
 /**
- * Validates persisted hands, solutions, identities, and order before they affect a score.
+ * Validates ordered puzzle identities and distinct, physically possible seven-card deals.
  *
  * @category schemas
  * @since 0.1.0
  */
-export const StoredPuzzles = Schema.Array(StoredPuzzle).check(
+export const StoredPuzzles = Schema.Array(Puzzle).check(
   Schema.isBetweenLength(5, 5),
   Schema.makeFilter((puzzles) =>
     puzzles.every(
       (puzzle, index) =>
-        puzzle.position === index + 1 &&
-        classify(puzzle.cards) === puzzle.correctAnswer &&
-        new Set(puzzle.choices).size === 2,
+        puzzle.position === index + 1 && new Set(cardsFor(puzzle).map(cardKey)).size === 7,
     ) &&
     new Set(puzzles.map((puzzle) => puzzle.id)).size === 5 &&
-    new Set(puzzles.map((puzzle) => handKey(puzzle.cards))).size === 5 &&
-    new Set(puzzles.map((puzzle) => puzzle.correctAnswer)).size === 2
+    new Set(puzzles.map((puzzle) => selectionKey(cardsFor(puzzle)))).size === 5
       ? undefined
-      : "Expected five distinct, ordered beginner puzzles with valid solutions",
+      : "Expected five distinct, ordered puzzles with seven unique cards each",
   ),
 );
 
 /**
- * Generates five shuffled, distinct hands containing both beginner categories.
+ * Category followed by descending tie-break ranks; suits never affect hand strength.
+ *
+ * @category models
+ * @since 0.1.0
+ */
+export interface EvaluatedHand {
+  readonly handType: HandType;
+  readonly value: ReadonlyArray<number>;
+}
+
+/**
+ * Evaluates five distinct, validated cards using standard high poker hand rankings.
+ *
+ * @category rules
+ * @since 0.1.0
+ */
+export const evaluateFive = (cards: ReadonlyArray<Card>): EvaluatedHand => {
+  const values = cards.map(rankValue).sort((left, right) => right - left);
+  const counts = new Map<number, number>();
+  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
+  const groups = [...counts].sort(
+    ([leftRank, leftCount], [rightRank, rightCount]) =>
+      rightCount - leftCount || rightRank - leftRank,
+  );
+  const [firstRank = 0, firstCount = 0] = groups[0] ?? [];
+  const [secondRank = 0, secondCount = 0] = groups[1] ?? [];
+  const flush = new Set(cards.map((card) => card.suit)).size === 1;
+  const highest = values[0] ?? 0;
+  const straightHigh =
+    counts.size === 5 && highest - (values[4] ?? 0) === 4
+      ? highest
+      : values.join(",") === "14,5,4,3,2"
+        ? 5
+        : 0;
+
+  if (flush && straightHigh > 0) return { handType: "straight-flush", value: [8, straightHigh] };
+  if (firstCount === 4) return { handType: "four-of-a-kind", value: [7, firstRank, secondRank] };
+  if (firstCount === 3 && secondCount === 2) {
+    return { handType: "full-house", value: [6, firstRank, secondRank] };
+  }
+  if (flush) return { handType: "flush", value: [5, ...values] };
+  if (straightHigh > 0) return { handType: "straight", value: [4, straightHigh] };
+  if (firstCount === 3) {
+    return { handType: "three-of-a-kind", value: [3, ...groups.map(([rank]) => rank)] };
+  }
+  if (firstCount === 2 && secondCount === 2) {
+    return { handType: "two-pair", value: [2, ...groups.map(([rank]) => rank)] };
+  }
+  if (firstCount === 2) {
+    return { handType: "one-pair", value: [1, ...groups.map(([rank]) => rank)] };
+  }
+  return { handType: "high-card", value: [0, ...values] };
+};
+
+/**
+ * Positive means the left hand wins; zero means an exact poker tie, regardless of suits.
+ *
+ * @category rules
+ * @since 0.1.0
+ */
+export const compareHands = (left: EvaluatedHand, right: EvaluatedHand): number => {
+  for (let index = 0; index < Math.max(left.value.length, right.value.length); index++) {
+    const difference = (left.value[index] ?? 0) - (right.value[index] ?? 0);
+    if (difference !== 0) return Math.sign(difference);
+  }
+  return 0;
+};
+
+/**
+ * Finds the best of all 21 five-card subsets of seven distinct, validated cards.
+ * Zero, one, or two hole cards can contribute; card order does not affect the result.
+ *
+ * @category rules
+ * @since 0.1.0
+ */
+export const bestHand = (
+  cards: ReadonlyArray<Card>,
+): EvaluatedHand & { readonly cards: ReadonlyArray<Card> } => {
+  const available = canonicalCards(cards);
+  const candidates: Array<EvaluatedHand & { readonly cards: ReadonlyArray<Card> }> = [];
+  for (let first = 0; first < 6; first++) {
+    for (let second = first + 1; second < 7; second++) {
+      const five = available.filter((_, index) => index !== first && index !== second);
+      candidates.push({ ...evaluateFive(five), cards: five });
+    }
+  }
+  return candidates.reduce((best, candidate) =>
+    compareHands(candidate, best) > 0 ? candidate : best,
+  );
+};
+
+const rankNames = [
+  "",
+  "",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "jack",
+  "queen",
+  "king",
+  "ace",
+];
+const pluralNames = [
+  "",
+  "",
+  "twos",
+  "threes",
+  "fours",
+  "fives",
+  "sixes",
+  "sevens",
+  "eights",
+  "nines",
+  "tens",
+  "jacks",
+  "queens",
+  "kings",
+  "aces",
+];
+const describe = ({ handType, value }: EvaluatedHand): string => {
+  const first = value[1] ?? 0;
+  const second = value[2] ?? 0;
+  const kickers = (offset: number) =>
+    value
+      .slice(offset)
+      .map((rank) => rankNames[rank])
+      .join(", ");
+  switch (handType) {
+    case "high-card":
+      return `${rankNames[first]}-high hand with ${kickers(2)} kickers`;
+    case "one-pair":
+      return `pair of ${pluralNames[first]} with ${kickers(2)} kickers`;
+    case "two-pair":
+      return `two pair, ${pluralNames[first]} and ${pluralNames[second]}, with a ${rankNames[value[3] ?? 0]} kicker`;
+    case "three-of-a-kind":
+      return `three ${pluralNames[first]} with ${kickers(2)} kickers`;
+    case "straight":
+      return `${rankNames[first]}-high straight${first === 5 ? " (ace plays low)" : ""}`;
+    case "flush":
+      return `${rankNames[first]}-high flush (${kickers(1)})`;
+    case "full-house":
+      return `${pluralNames[first]} full of ${pluralNames[second]}`;
+    case "four-of-a-kind":
+      return `four ${pluralNames[first]} with a ${rankNames[second]} kicker`;
+    case "straight-flush":
+      return `${rankNames[first]}-high straight flush${first === 14 ? " (royal flush)" : first === 5 ? " (ace plays low)" : ""}`;
+  }
+};
+
+/**
+ * Grades a valid selection by strength, accepting every tied best five-card selection.
+ *
+ * @category rules
+ * @since 0.1.0
+ */
+export const feedbackFor = (puzzle: Puzzle, selectedCards: ReadonlyArray<Card>): AnswerFeedback => {
+  const selected = evaluateFive(selectedCards);
+  const best = bestHand(cardsFor(puzzle));
+  const correct = compareHands(selected, best) === 0;
+  const canonicalSelection = canonicalCards(selectedCards);
+  return {
+    puzzleId: puzzle.id,
+    selectedCards: canonicalSelection,
+    bestCards: correct ? canonicalSelection : best.cards,
+    selectedHandType: selected.handType,
+    bestHandType: best.handType,
+    correct,
+    explanation: correct
+      ? `Your ${describe(selected)} is the best available hand.`
+      : `Your ${describe(selected)} is beaten by ${describe(best)}.`,
+  };
+};
+
+/**
+ * Generates five distinct shuffled deals without restricting hand categories.
  *
  * @category generation
  * @since 0.1.0
  */
 export const generatePuzzles = Effect.fn("@snapcall/RoundRules.generatePuzzles")(function* () {
   const crypto = yield* Crypto.Crypto;
-  const extra: HandType = (yield* crypto.randomBoolean) ? "high-card" : "one-pair";
-  const categories: ReadonlyArray<HandType> = [
-    "high-card",
-    "high-card",
-    "one-pair",
-    "one-pair",
-    extra,
-  ];
-  const order = yield* crypto.randomShuffle(categories);
   const puzzles: Array<StoredPuzzle> = [];
-  const usedHands = new Set<string>();
-  for (const correctAnswer of order) {
-    // Rejection sampling keeps stronger hands out without changing the shuffled deck.
-    while (true) {
-      const cards = (yield* crypto.randomShuffle(deck)).slice(0, 5);
-      const key = handKey(cards);
-      if (classify(cards) !== correctAnswer || usedHands.has(key)) continue;
-      usedHands.add(key);
-      puzzles.push({
-        id: yield* crypto.randomUUIDv4(),
-        position: puzzles.length + 1,
-        cards,
-        choices: ["high-card", "one-pair"],
-        correctAnswer,
-      });
-      break;
-    }
+  const usedDeals = new Set<string>();
+  while (puzzles.length < 5) {
+    const cards = (yield* crypto.randomShuffle(deck)).slice(0, 7);
+    const key = selectionKey(cards);
+    if (usedDeals.has(key)) continue;
+    usedDeals.add(key);
+    puzzles.push({
+      id: yield* crypto.randomUUIDv4(),
+      position: puzzles.length + 1,
+      holeCards: cards.slice(0, 2),
+      board: {
+        flop: cards.slice(2, 5),
+        turn: Array.getUnsafe(cards, 5),
+        river: Array.getUnsafe(cards, 6),
+      },
+    });
   }
   return puzzles;
 });
@@ -132,20 +313,3 @@ export const generatePuzzles = Effect.fn("@snapcall/RoundRules.generatePuzzles")
  */
 export const starsForScore = (score: number): 0 | 1 | 2 | 3 =>
   score === 5 ? 3 : score === 4 ? 2 : score === 3 ? 1 : 0;
-
-/**
- * Creates stable immediate feedback from the persisted solution.
- *
- * @category rules
- * @since 0.1.0
- */
-export const feedbackFor = (puzzle: StoredPuzzle, answer: HandType): AnswerFeedback => ({
-  puzzleId: puzzle.id,
-  answer,
-  correctAnswer: puzzle.correctAnswer,
-  correct: answer === puzzle.correctAnswer,
-  explanation:
-    puzzle.correctAnswer === "one-pair"
-      ? "Two cards share the same rank, so this hand is one pair."
-      : "All five ranks are different, with no straight or flush, so this is high card.",
-});

@@ -79,11 +79,11 @@ data class RoundAttempt (
     /**
      * 
      *
-     * Values: handMinusRecognition
+     * Values: handMinusStrength
      */
     @JsonClass(generateAdapter = false)
     enum class RoundId(val value: kotlin.String) {
-        @Json(name = "hand-recognition") handMinusRecognition("hand-recognition");
+        @Json(name = "hand-strength") handMinusStrength("hand-strength");
     }
     /**
      * 

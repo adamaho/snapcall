@@ -1,12 +1,14 @@
 # Snapcall
 
-Android-first poker puzzles, built on a pnpm workspace with Effect. The server
-now supports anonymous players and a complete five-puzzle hand recognition
-round: high card or one pair, immediate feedback, stars, and whole-round replays.
-Attempts and best completed scores persist in PostgreSQL.
+Android-first poker puzzles, built on a pnpm workspace with Effect. The first game
+mode is Hand Strength: each of five puzzles deals two hole cards and a complete
+flop, turn, and river, and the player chooses the strongest five of those seven
+cards. The server supports anonymous players, this five-puzzle round, immediate
+feedback, stars, and whole-round replays. Attempts and best completed scores
+persist in PostgreSQL.
 
-The Android app currently shows a welcome screen. Connecting its generated API
-client to the game UI is the next step.
+The Android app currently shows a welcome screen; it has no Hand Strength game
+UI yet. Connecting its generated API client to a game screen is the next step.
 
 ## Start the server
 

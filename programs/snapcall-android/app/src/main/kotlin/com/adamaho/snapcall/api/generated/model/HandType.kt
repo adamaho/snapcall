@@ -30,7 +30,7 @@ import com.squareup.moshi.JsonClass
 /**
  * 
  *
- * Values: highMinusCard,oneMinusPair
+ * Values: highMinusCard,oneMinusPair,twoMinusPair,threeMinusOfMinusAMinusKind,straight,flush,fullMinusHouse,fourMinusOfMinusAMinusKind,straightMinusFlush
  */
 
 @JsonClass(generateAdapter = false)
@@ -40,7 +40,28 @@ enum class HandType(val value: kotlin.String) {
     highMinusCard("high-card"),
 
     @Json(name = "one-pair")
-    oneMinusPair("one-pair");
+    oneMinusPair("one-pair"),
+
+    @Json(name = "two-pair")
+    twoMinusPair("two-pair"),
+
+    @Json(name = "three-of-a-kind")
+    threeMinusOfMinusAMinusKind("three-of-a-kind"),
+
+    @Json(name = "straight")
+    straight("straight"),
+
+    @Json(name = "flush")
+    flush("flush"),
+
+    @Json(name = "full-house")
+    fullMinusHouse("full-house"),
+
+    @Json(name = "four-of-a-kind")
+    fourMinusOfMinusAMinusKind("four-of-a-kind"),
+
+    @Json(name = "straight-flush")
+    straightMinusFlush("straight-flush");
 
     /**
      * Override [toString()] to avoid using the enum variable name as the value, and instead use

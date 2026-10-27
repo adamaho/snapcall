@@ -21,7 +21,7 @@ export default Effect.gen(function* () {
       id uuid PRIMARY KEY,
       player_id uuid NOT NULL REFERENCES players(id) ON DELETE CASCADE,
       request_id uuid NOT NULL,
-      round_id text NOT NULL CHECK (round_id = 'hand-recognition'),
+      round_id text NOT NULL CHECK (round_id = 'hand-strength'),
       puzzles jsonb NOT NULL CHECK (jsonb_typeof(puzzles) = 'array' AND jsonb_array_length(puzzles) = 5),
       created_at timestamptz NOT NULL DEFAULT now(),
       UNIQUE (player_id, request_id)
@@ -33,7 +33,7 @@ export default Effect.gen(function* () {
       attempt_id uuid NOT NULL REFERENCES round_attempts(id) ON DELETE CASCADE,
       puzzle_id uuid NOT NULL,
       position smallint NOT NULL CHECK (position BETWEEN 1 AND 5),
-      answer text NOT NULL CHECK (answer IN ('high-card', 'one-pair')),
+      selected_cards jsonb NOT NULL CHECK (jsonb_typeof(selected_cards) = 'array' AND jsonb_array_length(selected_cards) = 5),
       correct boolean NOT NULL,
       created_at timestamptz NOT NULL DEFAULT now(),
       PRIMARY KEY (attempt_id, puzzle_id),

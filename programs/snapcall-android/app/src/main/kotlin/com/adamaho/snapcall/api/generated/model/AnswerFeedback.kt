@@ -23,17 +23,20 @@
 
 package com.adamaho.snapcall.api.generated.model
 
+import com.adamaho.snapcall.api.generated.model.Card
 import com.adamaho.snapcall.api.generated.model.HandType
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**
- * 
+ * bestCards repeats the accepted selection when it is correct; otherwise it is one strongest five-card hand.
  *
  * @param puzzleId 
- * @param answer 
- * @param correctAnswer 
+ * @param selectedCards 
+ * @param bestCards 
+ * @param selectedHandType 
+ * @param bestHandType 
  * @param correct 
  * @param explanation 
  */
@@ -44,11 +47,17 @@ data class AnswerFeedback (
     @Json(name = "puzzleId")
     val puzzleId: java.util.UUID,
 
-    @Json(name = "answer")
-    val answer: HandType,
+    @Json(name = "selectedCards")
+    val selectedCards: kotlin.collections.Set<Card>,
 
-    @Json(name = "correctAnswer")
-    val correctAnswer: HandType,
+    @Json(name = "bestCards")
+    val bestCards: kotlin.collections.Set<Card>,
+
+    @Json(name = "selectedHandType")
+    val selectedHandType: HandType,
+
+    @Json(name = "bestHandType")
+    val bestHandType: HandType,
 
     @Json(name = "correct")
     val correct: kotlin.Boolean,

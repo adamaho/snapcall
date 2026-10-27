@@ -33,17 +33,25 @@ export const PuzzleId = Schema.String.check(Schema.isUUID()).annotate({ identifi
 export type PuzzleId = typeof PuzzleId.Type;
 
 /**
- * Hand categories available in the first recognition round.
+ * Standard high poker hand categories, weakest first; a royal flush is an ace-high straight flush.
  *
  * @category models
  * @since 0.1.0
  */
-export const HandType = Schema.Literals(["high-card", "one-pair"]).annotate({
-  identifier: "HandType",
-});
+export const HandType = Schema.Literals([
+  "high-card",
+  "one-pair",
+  "two-pair",
+  "three-of-a-kind",
+  "straight",
+  "flush",
+  "full-house",
+  "four-of-a-kind",
+  "straight-flush",
+]).annotate({ identifier: "HandType" });
 
 /**
- * Hand categories available in the first recognition round.
+ * Standard high poker hand categories, weakest first; a royal flush is an ace-high straight flush.
  *
  * @category models
  * @since 0.1.0
@@ -70,7 +78,45 @@ export const Card = Schema.Struct({
 export interface Card extends Schema.Schema.Type<typeof Card> {}
 
 /**
- * The current question, without its solution.
+ * Five distinct cards chosen as one hand; their order is not significant.
+ *
+ * @category models
+ * @since 0.1.0
+ */
+export const SelectedCards = Schema.Array(Card)
+  .check(Schema.isBetweenLength(5, 5), Schema.isUnique())
+  .annotate({ identifier: "SelectedCards" });
+
+/**
+ * Five distinct cards chosen as one hand; their order is not significant.
+ *
+ * @category models
+ * @since 0.1.0
+ */
+export type SelectedCards = typeof SelectedCards.Type;
+
+/**
+ * The five shared cards, dealt as a complete flop, turn, and river.
+ *
+ * @category models
+ * @since 0.1.0
+ */
+export const Board = Schema.Struct({
+  flop: Schema.Array(Card).check(Schema.isBetweenLength(3, 3)),
+  turn: Card,
+  river: Card,
+}).annotate({ identifier: "Board" });
+
+/**
+ * The five shared cards, dealt as a complete flop, turn, and river.
+ *
+ * @category models
+ * @since 0.1.0
+ */
+export interface Board extends Schema.Schema.Type<typeof Board> {}
+
+/**
+ * The current deal, without its solution; the best five may use zero, one, or two hole cards.
  *
  * @category models
  * @since 0.1.0
@@ -78,12 +124,12 @@ export interface Card extends Schema.Schema.Type<typeof Card> {}
 export const Puzzle = Schema.Struct({
   id: PuzzleId,
   position: Schema.Int.check(Schema.isBetween({ minimum: 1, maximum: 5 })),
-  cards: Schema.Array(Card).check(Schema.isBetweenLength(5, 5)),
-  choices: Schema.Array(HandType).check(Schema.isBetweenLength(2, 2)),
+  holeCards: Schema.Array(Card).check(Schema.isBetweenLength(2, 2)),
+  board: Board,
 }).annotate({ identifier: "Puzzle" });
 
 /**
- * The current question, without its solution.
+ * The current deal, without its solution; the best five may use zero, one, or two hole cards.
  *
  * @category models
  * @since 0.1.0
@@ -102,7 +148,7 @@ const Stars = Schema.Int.check(Schema.isBetween({ minimum: 0, maximum: 3 }));
  */
 export const RoundAttempt = Schema.Struct({
   id: AttemptId,
-  roundId: Schema.Literal("hand-recognition"),
+  roundId: Schema.Literal("hand-strength"),
   status: Schema.Literals(["in-progress", "completed"]),
   answeredCount: Score,
   score: Score,
@@ -143,18 +189,18 @@ export const StartAttempt = Schema.Struct({
 export interface StartAttempt extends Schema.Schema.Type<typeof StartAttempt> {}
 
 /**
- * One answer to the current puzzle.
+ * The five cards selected from the current puzzle's seven as its strongest hand.
  *
  * @category models
  * @since 0.1.0
  */
 export const SubmitAnswer = Schema.Struct({
   puzzleId: PuzzleId,
-  answer: HandType,
+  selectedCards: SelectedCards,
 }).annotate({ identifier: "SubmitAnswer" });
 
 /**
- * One answer to the current puzzle.
+ * The five cards selected from the current puzzle's seven as its strongest hand.
  *
  * @category models
  * @since 0.1.0
@@ -163,20 +209,28 @@ export interface SubmitAnswer extends Schema.Schema.Type<typeof SubmitAnswer> {}
 
 /**
  * Feedback for an accepted answer; repeating that answer does not change it.
+ * Any selection tied with the strongest hand is correct; suits never break ties.
  *
  * @category models
  * @since 0.1.0
  */
 export const AnswerFeedback = Schema.Struct({
   puzzleId: PuzzleId,
-  answer: HandType,
-  correctAnswer: HandType,
+  selectedCards: SelectedCards,
+  bestCards: SelectedCards,
+  selectedHandType: HandType,
+  bestHandType: HandType,
   correct: Schema.Boolean,
   explanation: Schema.String,
-}).annotate({ identifier: "AnswerFeedback" });
+}).annotate({
+  identifier: "AnswerFeedback",
+  description:
+    "bestCards repeats the accepted selection when it is correct; otherwise it is one strongest five-card hand.",
+});
 
 /**
  * Feedback for an accepted answer; repeating that answer does not change it.
+ * Any selection tied with the strongest hand is correct; suits never break ties.
  *
  * @category models
  * @since 0.1.0

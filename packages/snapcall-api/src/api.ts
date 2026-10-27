@@ -24,7 +24,7 @@ const strictPayload = { onExcessProperty: "error" } as const;
 export const api = HttpApi.make("snapcall-server")
   .annotate(OpenApi.Title, "Snapcall API")
   .annotate(OpenApi.Version, "0.0.0")
-  .annotate(OpenApi.Description, "Anonymous players and five-card hand recognition rounds.")
+  .annotate(OpenApi.Description, "Anonymous players and five-puzzle Hand Strength rounds.")
   .add(
     HttpApiGroup.make("health")
       .annotate(OpenApi.Description, "Server liveness.")
@@ -62,17 +62,20 @@ export const api = HttpApi.make("snapcall-server")
           ),
       ),
     HttpApiGroup.make("rounds")
-      .annotate(OpenApi.Description, "Five-question beginner hand recognition attempts.")
+      .annotate(
+        OpenApi.Description,
+        "Five-puzzle Hand Strength attempts: choose the strongest five of seven cards.",
+      )
       .add(
-        HttpApiEndpoint.post("start", "/rounds/hand-recognition/attempts", {
+        HttpApiEndpoint.post("start", "/rounds/hand-strength/attempts", {
           payload: StartAttempt,
           success: DataResponse(RoundAttempt),
         })
           .annotate(HttpApi.PayloadParseOptions, strictPayload)
-          .annotate(OpenApi.Summary, "Start or replay the hand recognition round")
+          .annotate(OpenApi.Summary, "Start or replay the Hand Strength round")
           .annotate(
             OpenApi.Description,
-            "A new request ID creates five fresh hands. Repeating the same player's request ID returns the existing attempt without creating another.",
+            "A new request ID creates five fresh seven-card deals. Repeating the same player's request ID returns the existing attempt without creating another.",
           ),
       )
       .add(
@@ -98,7 +101,7 @@ export const api = HttpApi.make("snapcall-server")
           .annotate(OpenApi.Summary, "Answer the current puzzle")
           .annotate(
             OpenApi.Description,
-            "Accepts one answer and returns immediate feedback with the next puzzle or final result. Repeating the same answer returns its original feedback and the latest state without scoring twice. A different answer to an answered puzzle or an out-of-order puzzle returns 409.",
+            "Accepts five distinct cards from the current puzzle and returns immediate feedback with the next puzzle or final result. Any selection tied with the strongest hand is correct. Repeating the same cards in any order returns the original feedback and the latest state without scoring twice. Cards not dealt in the puzzle, a different selection for an answered puzzle, or an out-of-order puzzle returns 409.",
           ),
       )
       .middleware(PlayerAuth),

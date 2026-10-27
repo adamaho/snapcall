@@ -20,7 +20,7 @@ interface RoundsApi {
     /**
      * POST round-attempts/{attemptId}/answers
      * Answer the current puzzle
-     * Accepts one answer and returns immediate feedback with the next puzzle or final result. Repeating the same answer returns its original feedback and the latest state without scoring twice. A different answer to an answered puzzle or an out-of-order puzzle returns 409.
+     * Accepts five distinct cards from the current puzzle and returns immediate feedback with the next puzzle or final result. Any selection tied with the strongest hand is correct. Repeating the same cards in any order returns the original feedback and the latest state without scoring twice. Cards not dealt in the puzzle, a different selection for an answered puzzle, or an out-of-order puzzle returns 409.
      * Responses:
      *  - 200: Success
      *  - 401: A valid anonymous player bearer token is required.
@@ -52,9 +52,9 @@ interface RoundsApi {
     suspend fun roundsGet(@Path("attemptId") attemptId: java.util.UUID): Response<RoundsGet200Response>
 
     /**
-     * POST rounds/hand-recognition/attempts
-     * Start or replay the hand recognition round
-     * A new request ID creates five fresh hands. Repeating the same player&#39;s request ID returns the existing attempt without creating another.
+     * POST rounds/hand-strength/attempts
+     * Start or replay the Hand Strength round
+     * A new request ID creates five fresh seven-card deals. Repeating the same player&#39;s request ID returns the existing attempt without creating another.
      * Responses:
      *  - 200: Success
      *  - 401: A valid anonymous player bearer token is required.
@@ -63,7 +63,7 @@ interface RoundsApi {
      * @param startAttempt 
      * @return [RoundsStart200Response]
      */
-    @POST("rounds/hand-recognition/attempts")
+    @POST("rounds/hand-strength/attempts")
     suspend fun roundsStart(@Body startAttempt: StartAttempt): Response<RoundsStart200Response>
 
 }

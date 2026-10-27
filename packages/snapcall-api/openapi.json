@@ -3,7 +3,7 @@
   "info": {
     "title": "Snapcall API",
     "version": "0.0.0",
-    "description": "Anonymous players and five-card hand recognition rounds."
+    "description": "Anonymous players and five-puzzle Hand Strength rounds."
   },
   "paths": {
     "/health": {
@@ -74,7 +74,7 @@
         "summary": "Create an anonymous player"
       }
     },
-    "/rounds/hand-recognition/attempts": {
+    "/rounds/hand-strength/attempts": {
       "post": {
         "tags": ["rounds"],
         "operationId": "rounds.start",
@@ -123,8 +123,8 @@
             }
           }
         },
-        "description": "A new request ID creates five fresh hands. Repeating the same player's request ID returns the existing attempt without creating another.",
-        "summary": "Start or replay the hand recognition round",
+        "description": "A new request ID creates five fresh seven-card deals. Repeating the same player's request ID returns the existing attempt without creating another.",
+        "summary": "Start or replay the Hand Strength round",
         "requestBody": {
           "content": {
             "application/json": {
@@ -287,7 +287,7 @@
             }
           }
         },
-        "description": "Accepts one answer and returns immediate feedback with the next puzzle or final result. Repeating the same answer returns its original feedback and the latest state without scoring twice. A different answer to an answered puzzle or an out-of-order puzzle returns 409.",
+        "description": "Accepts five distinct cards from the current puzzle and returns immediate feedback with the next puzzle or final result. Any selection tied with the strongest hand is correct. Repeating the same cards in any order returns the original feedback and the latest state without scoring twice. Cards not dealt in the puzzle, a different selection for an answered puzzle, or an out-of-order puzzle returns 409.",
         "summary": "Answer the current puzzle",
         "requestBody": {
           "content": {
@@ -383,7 +383,7 @@
           },
           "roundId": {
             "type": "string",
-            "enum": ["hand-recognition"]
+            "enum": ["hand-strength"]
           },
           "status": {
             "type": "string",
@@ -458,29 +458,41 @@
             "minimum": 1,
             "maximum": 5
           },
-          "cards": {
+          "holeCards": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Card"
             },
-            "minItems": 5,
-            "maxItems": 5
-          },
-          "choices": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HandType"
-            },
             "minItems": 2,
             "maxItems": 2
+          },
+          "board": {
+            "$ref": "#/components/schemas/Board"
           }
         },
-        "required": ["id", "position", "cards", "choices"],
+        "required": ["id", "position", "holeCards", "board"],
         "additionalProperties": false
       },
-      "HandType": {
-        "type": "string",
-        "enum": ["high-card", "one-pair"]
+      "Board": {
+        "type": "object",
+        "properties": {
+          "flop": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "turn": {
+            "$ref": "#/components/schemas/Card"
+          },
+          "river": {
+            "$ref": "#/components/schemas/Card"
+          }
+        },
+        "required": ["flop", "turn", "river"],
+        "additionalProperties": false
       },
       "Card": {
         "type": "object",
@@ -508,10 +520,16 @@
           "puzzleId": {
             "$ref": "#/components/schemas/PuzzleId"
           },
-          "answer": {
+          "selectedCards": {
+            "$ref": "#/components/schemas/SelectedCards"
+          },
+          "bestCards": {
+            "$ref": "#/components/schemas/SelectedCards"
+          },
+          "selectedHandType": {
             "$ref": "#/components/schemas/HandType"
           },
-          "correctAnswer": {
+          "bestHandType": {
             "$ref": "#/components/schemas/HandType"
           },
           "correct": {
@@ -521,8 +539,40 @@
             "type": "string"
           }
         },
-        "required": ["puzzleId", "answer", "correctAnswer", "correct", "explanation"],
-        "additionalProperties": false
+        "required": [
+          "puzzleId",
+          "selectedCards",
+          "bestCards",
+          "selectedHandType",
+          "bestHandType",
+          "correct",
+          "explanation"
+        ],
+        "additionalProperties": false,
+        "description": "bestCards repeats the accepted selection when it is correct; otherwise it is one strongest five-card hand."
+      },
+      "HandType": {
+        "type": "string",
+        "enum": [
+          "high-card",
+          "one-pair",
+          "two-pair",
+          "three-of-a-kind",
+          "straight",
+          "flush",
+          "full-house",
+          "four-of-a-kind",
+          "straight-flush"
+        ]
+      },
+      "SelectedCards": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Card"
+        },
+        "minItems": 5,
+        "maxItems": 5,
+        "uniqueItems": true
       },
       "SubmitAnswer": {
         "type": "object",
@@ -530,11 +580,11 @@
           "puzzleId": {
             "$ref": "#/components/schemas/PuzzleId"
           },
-          "answer": {
-            "$ref": "#/components/schemas/HandType"
+          "selectedCards": {
+            "$ref": "#/components/schemas/SelectedCards"
           }
         },
-        "required": ["puzzleId", "answer"],
+        "required": ["puzzleId", "selectedCards"],
         "additionalProperties": false
       },
       "StartAttempt": {
@@ -606,7 +656,7 @@
     },
     {
       "name": "rounds",
-      "description": "Five-question beginner hand recognition attempts."
+      "description": "Five-puzzle Hand Strength attempts: choose the strongest five of seven cards."
     }
   ]
 }

@@ -1,11 +1,11 @@
 import {
   type AnswerResult,
   AttemptId,
-  HandType,
   PuzzleId,
   type RoundAttempt,
   RoundConflict,
   RoundNotFound,
+  SelectedCards,
   type SubmitAnswer,
 } from "@snapcall/snapcall-api/rounds";
 import { Context, Effect, Layer, Schema } from "effect";
@@ -52,7 +52,7 @@ export interface Interface {
 }
 
 /**
- * Persistence boundary for the first recognition round.
+ * Persistence boundary for the Hand Strength round.
  *
  * @category services
  * @since 0.1.0
@@ -64,7 +64,7 @@ export class Service extends Context.Service<Service, Interface>()(
 const SavedAnswer = Schema.Struct({
   puzzleId: PuzzleId,
   position: Schema.Int.check(Schema.isBetween({ minimum: 1, maximum: 5 })),
-  answer: HandType,
+  selectedCards: SelectedCards,
   correct: Schema.Boolean,
 });
 
@@ -81,7 +81,8 @@ const SnapshotRow = Schema.Struct({
         puzzle !== undefined &&
         answer.position === index + 1 &&
         answer.puzzleId === puzzle.id &&
-        answer.correct === (answer.answer === puzzle.correctAnswer)
+        Rules.isSelectionFrom(puzzle, answer.selectedCards) &&
+        answer.correct === Rules.feedbackFor(puzzle, answer.selectedCards).correct
       );
     })
       ? undefined
@@ -102,7 +103,7 @@ const publicSnapshot = (row: SnapshotRow): RoundAttempt => {
   const current = row.puzzles[answeredCount];
   return {
     id: row.id,
-    roundId: "hand-recognition",
+    roundId: "hand-strength",
     status: completed ? "completed" : "in-progress",
     answeredCount,
     score,
@@ -115,8 +116,8 @@ const publicSnapshot = (row: SnapshotRow): RoundAttempt => {
         : {
             id: current.id,
             position: current.position,
-            cards: current.cards,
-            choices: current.choices,
+            holeCards: current.holeCards,
+            board: current.board,
           },
   };
 };
@@ -138,7 +139,7 @@ export const layer = Layer.effect(
         COALESCE((
           SELECT jsonb_agg(jsonb_build_object(
             'puzzleId', answer.puzzle_id::text, 'position', answer.position,
-            'answer', answer.answer, 'correct', answer.correct
+            'selectedCards', answer.selected_cards, 'correct', answer.correct
           ) ORDER BY answer.position)
           FROM round_answers answer WHERE answer.attempt_id = attempt.id
         ), '[]'::jsonb) AS answers,
@@ -179,7 +180,7 @@ export const layer = Layer.effect(
             const stored = yield* Schema.decodeEffect(Rules.StoredPuzzles)(puzzles);
             yield* sql`
             INSERT INTO round_attempts (id, player_id, request_id, round_id, puzzles)
-            VALUES (${attemptId}, ${playerId}, ${requestId}, 'hand-recognition', ${JSON.stringify(stored)}::jsonb)
+            VALUES (${attemptId}, ${playerId}, ${requestId}, 'hand-strength', ${JSON.stringify(stored)}::jsonb)
             ON CONFLICT (player_id, request_id) DO NOTHING
           `;
             // The second statement sees a concurrent winner after its insert commits.
@@ -227,12 +228,15 @@ export const layer = Layer.effect(
             const previous = row.answers.find((saved) => saved.puzzleId === payload.puzzleId);
             // Check retries before completion or current position: even the fifth answer is retryable.
             if (previous !== undefined) {
-              if (previous.answer !== payload.answer)
+              if (
+                Rules.selectionKey(previous.selectedCards) !==
+                Rules.selectionKey(payload.selectedCards)
+              )
                 return yield* new RoundConflict({
                   message: "This puzzle already has a different answer.",
                 });
               return {
-                feedback: Rules.feedbackFor(puzzle, previous.answer),
+                feedback: Rules.feedbackFor(puzzle, previous.selectedCards),
                 attempt: publicSnapshot(row),
               };
             }
@@ -241,10 +245,15 @@ export const layer = Layer.effect(
                 message: "Answer the current puzzle before continuing.",
               });
             }
-            const feedback = Rules.feedbackFor(puzzle, payload.answer);
+            if (!Rules.isSelectionFrom(puzzle, payload.selectedCards)) {
+              return yield* new RoundConflict({
+                message: "Select five cards dealt in this puzzle.",
+              });
+            }
+            const feedback = Rules.feedbackFor(puzzle, payload.selectedCards);
             yield* sql`
-            INSERT INTO round_answers (attempt_id, puzzle_id, position, answer, correct)
-            VALUES (${attemptId}, ${puzzle.id}, ${puzzle.position}, ${payload.answer}, ${feedback.correct})
+            INSERT INTO round_answers (attempt_id, puzzle_id, position, selected_cards, correct)
+            VALUES (${attemptId}, ${puzzle.id}, ${puzzle.position}, ${JSON.stringify(feedback.selectedCards)}::jsonb, ${feedback.correct})
           `;
             return { feedback, attempt: publicSnapshot(yield* readOwned(playerId, attemptId)) };
           }),

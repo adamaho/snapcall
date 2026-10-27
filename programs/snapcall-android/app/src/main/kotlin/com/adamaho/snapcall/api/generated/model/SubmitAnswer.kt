@@ -23,7 +23,7 @@
 
 package com.adamaho.snapcall.api.generated.model
 
-import com.adamaho.snapcall.api.generated.model.HandType
+import com.adamaho.snapcall.api.generated.model.Card
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -32,7 +32,7 @@ import com.squareup.moshi.JsonClass
  * 
  *
  * @param puzzleId 
- * @param answer 
+ * @param selectedCards 
  */
 
 
@@ -41,8 +41,8 @@ data class SubmitAnswer (
     @Json(name = "puzzleId")
     val puzzleId: java.util.UUID,
 
-    @Json(name = "answer")
-    val answer: HandType
+    @Json(name = "selectedCards")
+    val selectedCards: kotlin.collections.Set<Card>
 
 ) {
 

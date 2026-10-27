@@ -23,8 +23,8 @@
 
 package com.adamaho.snapcall.api.generated.model
 
+import com.adamaho.snapcall.api.generated.model.Board
 import com.adamaho.snapcall.api.generated.model.Card
-import com.adamaho.snapcall.api.generated.model.HandType
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -34,8 +34,8 @@ import com.squareup.moshi.JsonClass
  *
  * @param id 
  * @param position 
- * @param cards 
- * @param choices 
+ * @param holeCards 
+ * @param board 
  */
 
 
@@ -47,11 +47,11 @@ data class Puzzle (
     @Json(name = "position")
     val position: kotlin.Int,
 
-    @Json(name = "cards")
-    val cards: kotlin.collections.List<Card>,
+    @Json(name = "holeCards")
+    val holeCards: kotlin.collections.List<Card>,
 
-    @Json(name = "choices")
-    val choices: kotlin.collections.List<HandType>
+    @Json(name = "board")
+    val board: Board
 
 ) {
 
