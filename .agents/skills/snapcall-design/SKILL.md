@@ -23,7 +23,7 @@ Blue and orange were chosen over green and red so colorblind players can tell th
 
 ## Component names
 
-Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`, `Plate`, `PlateChain`, `ModuleBreadcrumb`, `RoundProgress`, `CloseButton`, `PokerTable`, `StreetLabels`, `AnswerButton`, `AnswerGrid`, `ActionButton`, `VerdictPanel`, `StarRow` and `HandRecapRow`. Use the same convention for component-specific types (`AnswerState`, `PlateColor`) and matching filenames. See [references/components.md](references/components.md).
+Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`, `InlineCard`, `Plate`, `PlateChain`, `ModuleBreadcrumb`, `RoundProgress`, `CloseButton`, `PokerTable`, `StreetLabels`, `AnswerButton`, `AnswerGrid`, `ActionButton`, `VerdictPanel`, `StarRow` and `HandRecapRow`. Use the same convention for component-specific types (`AnswerState`, `PlateColor`) and matching filenames. See [references/components.md](references/components.md).
 
 ## Typography
 
@@ -38,7 +38,7 @@ Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`,
 
 1. **Use the tokens.** Every color, text style, shape, spacing value and motion spec comes from `SnapcallTheme`. Do not hard-code hex values, dp values or `MaterialTheme.typography` styles in screens.
 2. **Color only teaches.** Use `right` and `wrong` only for answer feedback and teaching highlights. Do not add a brand accent, felt green, gold, gradients beyond the studio spotlight, or decorative color.
-3. **Cards are real cards.** Use white faces, the rank top-left and the suit bottom-right. Draw suits as vector drawables, never emoji or `♠` text. Hearts and diamonds use `suitRed`; spades and clubs use `cardInk`.
+3. **Cards are real cards.** Any card mentioned in text is an `InlineCard`, a small playing card, never plain letters. Use white faces, the rank top-left and the suit bottom-right. Draw suits as vector drawables, never emoji or `♠` text. Hearts and diamonds use `suitRed`; spades and clubs use `cardInk`.
 4. **Flat plates, no angles.** Labels, chips and verdicts sit on flat rectangular plates with 4dp corners. Never slant, skew or clip them into parallelograms. Buttons also have 4dp corners and cards have 5–7dp corners. Only the close button is round.
 5. **No ripples.** Press feedback moves the control down 2dp and brightens its fill slightly, then springs back. Use `indication = null` with the press modifier.
 6. **Dark only, for now.** Broadcast is designed as a dark studio. A light theme is not designed; ask before adding one.

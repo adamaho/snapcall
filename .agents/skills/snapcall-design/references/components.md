@@ -10,6 +10,12 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - `faded`: 28% opacity, for board cards that play no part once the answer is shown.
 - Announce as "King of spades". Cards are not interactive.
 
+## InlineCard
+
+- Any card named in text (verdicts, corrections, tutorial copy) is an `InlineCard`, never letters like "K Q J". It is a 22dp-tall white `card` chip with 3dp corners and 4dp side padding, holding the rank in `cardRank` at 16sp and a 10dp suit, in `cardInk` or `suitRed`.
+- It sits on the text baseline (lowered 5dp) with 3dp between chips and a 2dp shadow. A run of cards does not wrap. Body text around inline cards uses a 1.6 line height so the chips don't crowd the lines.
+- Announce each as "King of spades".
+
 ## Plate and PlateChain
 
 - A `Plate` is a text label on a flat fill with 4dp corners. It is never slanted or skewed.
@@ -62,7 +68,7 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - A `surface` card with a 1dp `outline` border, 8dp corners and 16dp padding, placed directly above the `AnswerGrid` with an 18dp gap. It slides up 24dp and fades in on answer, and never covers the answers.
 - Right answers get no plate: the highlighted answer already shows what was right.
 - Wrong answers start with a `Wrong` plate naming the mistake, such as `Not a flush`, 36dp tall.
-- Body: one or two `body` sentences that name the exact cards.
+- Body: one or two `body` sentences that name the exact cards as `InlineCard`s.
 - A primary `ActionButton`, 52dp tall inside the card, closes it: `Got it` after a wrong answer, `Next hand` after a right one.
 
 ## StarRow

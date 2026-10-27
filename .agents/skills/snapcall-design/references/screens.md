@@ -35,8 +35,8 @@ The approved layout for every hand-strength situation. The sample situation: hol
 ### States
 
 - **Question**: cards deal in by street, then the hole cards. Answers are idle. Nothing else moves except the progress pulse.
-- **Answered right**: the picked answer turns `Right`, and the others dim. The cards that make the hand get the `right` outline, and unused board cards fade. The `VerdictPanel` slides in above the answers with no plate, just the explanation, such as "K Q J 10 9 in a row. The four spades were bait, there's no flush here." and `Next hand`.
-- **Answered wrong**: the picked answer turns `Wrong`, the right answer turns `Right`, and the others dim. Card highlighting is the same as for a right answer. The `VerdictPanel` names the mistake, such as "Four spades isn't enough, a flush needs five. Your best five cards are K Q J 10 9: a straight." It ends with `Got it`.
+- **Answered right**: the picked answer turns `Right`, and the others dim. The cards that make the hand get the `right` outline, and unused board cards fade. The `VerdictPanel` slides in above the answers with no plate, just the explanation, such as "[K♠ Q♠ J♠ 10♦ 9♣] in a row. The four spades were bait, there's no flush here." and `Next hand`.
+- **Answered wrong**: the picked answer turns `Wrong`, the right answer turns `Right`, and the others dim. Card highlighting is the same as for a right answer. The `VerdictPanel` names the mistake, such as "Four spades isn't enough, a flush needs five. Your best five cards are [K♠ Q♠ J♠ 10♦ 9♣] for a straight." (bracketed cards are `InlineCard`s) It ends with `Got it`.
 
 A missed hand is not repeated within the round. Retrying means replaying the whole round: five new hands, dealt as different permutations of the same skills.
 
