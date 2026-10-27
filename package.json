@@ -1,0 +1,36 @@
+{
+  "name": "monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "changeset": "changeset",
+    "changeset:status": "changeset status",
+    "check": "pnpm fmt:check && pnpm lint && turbo run tsc",
+    "clean": "turbo run clean && rimraf node_modules",
+    "dev": "turbo run dev --ui=tui",
+    "lint": "oxlint .",
+    "fmt": "oxfmt .",
+    "fmt:check": "oxfmt --check .",
+    "tsc": "turbo run tsc",
+    "version-packages": "changeset version"
+  },
+  "devDependencies": {
+    "@adamaho/nopeus-oxfmt-config": "catalog:",
+    "@adamaho/nopeus-oxlint-config": "catalog:",
+    "@adamaho/nopeus-oxlint-plugin": "catalog:",
+    "@changesets/cli": "catalog:",
+    "@effect/vitest": "catalog:",
+    "@types/node": "catalog:",
+    "effect": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "rimraf": "catalog:",
+    "turbo": "catalog:",
+    "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "^24.22.1",
+    "pnpm": "^12.14.0"
+  },
+  "packageManager": "pnpm@12.14.0"
+}
