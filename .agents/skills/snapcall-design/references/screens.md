@@ -9,7 +9,7 @@ Shown once, before the player's first round in a module, so the puzzle screens n
 - **Header**: `CloseButton` and the `ModuleBreadcrumb` ending in `How it works`.
 - **Illustration**, centered in the free space, 230dp tall:
   1. A small `PokerTable` with five board cards and two hole cards outlined in `right`. Title "The table": "The five cards in the middle are shared. The two at the bottom are yours."
-  2. The seven cards in a row (42×58dp) with the best five `selected` and the other two at 40% opacity, above a `Lock in` button. Title "Find your best hand": "Use any five of the seven cards. Tap the five that make your strongest hand, then lock in."
+  2. The seven cards in a row (42×58dp) with the best five lifted 10dp with the `right` outline and the other two at 40% opacity, above a `Lock in` button. Title "Find your best hand": "Use any five of the seven cards. Tap the five that make your strongest hand, then lock in."
   3. Two of three stars above five recap rows, each ending in a `right` check or a `wrong` X. Title "Earn your stars": "Each round is five hands, and your score earns up to three stars. Retry a round any time to play five new hands."
 - **Text**, centered: a `label` line (`STEP 1 OF 3`), the title in `title` style, then `body` in `textSecondary`.
 - **Step dots** above the button: 6dp dots in `outline`, with the current step a 20dp `textPrimary` pill.
