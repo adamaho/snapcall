@@ -4,8 +4,8 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 ## PlayingCard
 
-- White `card` face with `cardInk` or `suitRed` content. The rank sits top-left in `cardRank`, and the suit sits bottom-right as a vector drawable. Use 18dp suits on board cards and 30dp on hole cards.
-- Sizes: board 54×76dp with 5dp corners; hole 80×110dp with 7dp corners. Shadows as in `tokens.md`.
+- White `card` face with `cardInk` or `suitRed` content. The rank sits top-left in `cardRank`, and the suit sits bottom-right as a vector drawable. Use 18dp suits on board cards and 24dp on hole cards.
+- Sizes: board 54×76dp with 5dp corners; hole 64×88dp with 7dp corners. Shadows as in `tokens.md`.
 - `highlighted`: a 3dp `right` outline at a 2dp offset. Use it for the cards that make the hand, or the helpful cards in a probability puzzle.
 - `faded`: 28% opacity, for board cards that play no part once the answer is shown.
 - Announce as "King of spades". Cards are not interactive.

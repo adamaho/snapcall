@@ -49,7 +49,7 @@ Contrast, measured from the opaque sRGB pairs:
 | `breadcrumb` | Geist 500            | 14 / 20            | 0        | Header breadcrumb, sentence case          |
 | `chip`       | Geist 600            | 13 / 32            | 0.06em   | Chained plates such as `FIRST TRY`, caps  |
 | `label`      | Geist 600            | 11 / 16            | 0.14em   | Street names, section labels, notes, caps |
-| `cardRank`   | Instrument Serif 400 | 30 board, 46 hole  | 0        | Card ranks only                           |
+| `cardRank`   | Instrument Serif 400 | 30 board, 37 hole  | 0        | Card ranks only                           |
 | `body`       | Geist 400            | 16 / 23            | 0        | Corrections, one or two sentences         |
 
 Use tabular figures for scores, counts and odds so numbers do not shift while animating. Instrument Serif is for card ranks only and has a single weight; never fake bold or italic on it.
@@ -65,7 +65,7 @@ Use tabular figures for scores, counts and odds so numbers do not shift while an
 ## Spacing and size
 
 - Screen margin: 20dp. Vertical gap between sections: 18dp.
-- Board cards: 54×76dp with 6dp gaps (294dp row). Hole cards: 80×110dp with 4dp gaps, tilted −6° and +5° (the second also drops 5dp).
+- Board cards: 54×76dp with 6dp gaps (294dp row). Hole cards: 64×88dp with 4dp gaps, tilted −6° and +5° (the second also drops 5dp).
 - Table: 190dp tall, extending 6dp past the screen margin on each side. The board sits 54dp from its top; the hole cards sit 148dp from its top, overlapping its lower edge.
 - Answer buttons: 60dp tall in a 2×2 grid with 10dp gaps. Key plate: 34dp wide.
 - Action buttons: 56dp primary, 48dp secondary.
@@ -75,7 +75,7 @@ Use tabular figures for scores, counts and odds so numbers do not shift while an
 ## Elevation
 
 - Board cards: shadow y 6, blur 14, `scrim` 45%.
-- Hole cards: shadow y 14, blur 30, `scrim` 60%.
+- Hole cards: shadow y 12, blur 26, `scrim` 60%.
 - Verdict panel: shadow y −20, blur 40, `scrim` 50%.
 - Earned stars: a soft white glow (blur 14, white 22%).
 

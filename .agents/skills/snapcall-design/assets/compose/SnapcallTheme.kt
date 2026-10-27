@@ -126,7 +126,7 @@ val SnapcallType =
         chip = sans(FontWeight.SemiBold, 13, 32, 0.06),
         label = sans(FontWeight.SemiBold, 11, 16, 0.14),
         cardRankBoard = rank(30, 28),
-        cardRankHole = rank(46, 42),
+        cardRankHole = rank(37, 34),
         body = sans(FontWeight.Normal, 16, 23),
     )
 
@@ -144,8 +144,8 @@ object SnapcallSpacing {
     val boardCardWidth = 54.dp
     val boardCardHeight = 76.dp
     val boardCardGap = 6.dp
-    val holeCardWidth = 80.dp
-    val holeCardHeight = 110.dp
+    val holeCardWidth = 64.dp
+    val holeCardHeight = 88.dp
     val holeCardGap = 4.dp
     val tableHeight = 190.dp
     val tableBleed = 6.dp
