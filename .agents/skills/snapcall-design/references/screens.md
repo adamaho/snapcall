@@ -13,18 +13,18 @@ The approved layout for every hand-strength situation. The sample situation: hol
 - A row at least 44dp tall: `CloseButton`, then the `ModuleBreadcrumb` (`Hand strength › Hand 3 of 5`).
 - `RoundProgress` below it, 10dp under the row.
 
-**Prompt**: the question in `prompt` style, centered and balanced over two lines, such as "What's your best hand?" Ask one question per situation.
+**Prompt**: the question in `prompt` style, centered and balanced over two lines, such as "What's your best hand?" Ask one question per situation. It hides once the player answers, to make room for the verdict.
 
 **Table**: the `PokerTable` with `StreetLabels`, five board cards and two tilted hole cards (see components.md). For situations before the river, leave the missing streets' columns empty and keep their labels.
 
 **Hand plate**: the `HandPlate`, 6dp below the table area's bottom.
 
-**Answers**: the `AnswerGrid`.
+**Answers**: the `AnswerGrid`, pinned to the bottom of the screen above the navigation bar inset, so it sits under the thumb. Flexible space separates it from the table.
 
 ### States
 
 - **Question**: cards deal in by street, then the hole cards. Answers are idle. Nothing else moves except the progress pulse.
-- **Answered right**: the picked answer turns `Right`, and the others dim. The cards that make the hand get the `right` outline, and unused board cards fade. The hand plate wipes in the hand name. The `VerdictPanel` slides up with the right plate chain, such as "K Q J 10 9 in a row. The four spades were bait, there's no flush here." and `Next hand`.
+- **Answered right**: the picked answer turns `Right`, and the others dim. The cards that make the hand get the `right` outline, and unused board cards fade. The hand plate wipes in the hand name. The `VerdictPanel` slides in above the answers with no plate, just the explanation, such as "K Q J 10 9 in a row. The four spades were bait, there's no flush here." and `Next hand`.
 - **Answered wrong**: the picked answer turns `Wrong`, the right answer turns `Right`, and the others dim. Card highlighting and the hand plate are the same as for a right answer. The `VerdictPanel` names the mistake, such as "Four spades isn't enough, a flush needs five. Your best five cards are K Q J 10 9: a straight." It adds the retry note and `Got it`.
 
 Wrong situations are retried before the round ends. A retried situation is the same screen; its result counts as a retry on the round-complete screen.
@@ -39,7 +39,7 @@ Not yet designed beyond the decided behavior. Use the table view with four perce
 
 **Stars**: the `StarRow`, 6dp below the header.
 
-**Score**: the first-try count in `score` style with a smaller `/5` in `textMuted`, then a `label` line: `RIGHT ON THE FIRST TRY`. Whether stars count first tries only is undecided; keep this copy marked provisional.
+**Score**: the count in `score` style with a smaller `/5` in `textMuted`, with no caption. Retries happen at the end of the round, so the screen does not call out first tries beyond the recap chips. Whether stars count first tries only is undecided; keep the number provisional.
 
 **Pass status**: a light plate with a check, `NEXT ROUND UNLOCKED`, when the score meets the minimum. The failing state is not designed yet, and the pass threshold is undecided; ask before designing it.
 

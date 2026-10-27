@@ -64,13 +64,12 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 ## VerdictPanel
 
-- A `surface` panel pinned to the bottom edge, with 20dp side padding and 24dp bottom padding plus the navigation bar inset. It slides up on answer without covering the `AnswerGrid`.
-- Its verdict `PlateChain` sits 20dp above the panel's top edge:
-  - Right: a `Right` plate with the hand name, then a `Surface` sub-plate with `FIRST TRY` in `right` on a first try.
-  - Wrong: a `Wrong` plate naming the mistake, such as `Not a flush`.
+- A `surface` card with a 1dp `outline` border, 8dp corners and 16dp padding, placed directly above the `AnswerGrid` with an 18dp gap. It slides up 24dp and fades in on answer, and never covers the answers.
+- Right answers get no plate: the highlighted answer already shows what was right.
+- Wrong answers start with a `Wrong` plate naming the mistake, such as `Not a flush`, 36dp tall.
 - Body: one or two `body` sentences that name the exact cards.
 - Wrong answers add a `label` line in `textMuted` with a retry icon: `THIS ONE COMES BACK BEFORE THE ROUND ENDS`.
-- A primary `ActionButton` closes it: `Got it` after a wrong answer, `Next hand` after a right one.
+- A primary `ActionButton`, 52dp tall inside the card, closes it: `Got it` after a wrong answer, `Next hand` after a right one.
 
 ## StarRow
 

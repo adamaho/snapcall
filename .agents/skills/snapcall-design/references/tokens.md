@@ -42,7 +42,7 @@ Contrast, measured from the opaque sRGB pairs:
 | ------------ | -------------------- | ------------------ | -------- | ----------------------------------------- |
 | `prompt`     | Geist 700            | 32 / 35            | −0.02em  | Puzzle question, sentence case, centered  |
 | `score`      | Geist 700            | 88 / 80            | −0.04em  | Round-complete score                      |
-| `verdict`    | Geist 700            | 22 / 44            | 0        | Verdict plate, sentence case              |
+| `verdict`    | Geist 700            | 20 / 36            | 0        | Wrong verdict plate, sentence case        |
 | `handName`   | Geist 600            | 16 / 30            | 0        | Hand plate after an answer, recap rows    |
 | `answer`     | Geist 600            | 18 / 24            | 0        | Answer buttons, sentence case             |
 | `button`     | Geist 600            | 16 / 24            | 0        | Action buttons, sentence case             |
@@ -87,8 +87,8 @@ Ease out with `cubic-bezier(0.2, 0.8, 0.2, 1)` unless noted. With "Remove animat
 | --------------- | -------- | --------------------------------------------------------------- | ---------------------------------------------- |
 | Deal-in         | 420ms    | Flop 100, 180, 260ms; turn 500ms; river 740ms; hole 950, 1050ms | From 36dp above, 92% scale, transparent        |
 | Hand plate wipe | 350ms    | 150ms after the answer                                          | Left-to-right reveal                           |
-| Verdict slide   | 320ms    | On answer                                                       | Slides up from below the screen                |
-| Verdict plate   | 400ms    | 120ms, sub-plate 240ms                                          | Left-to-right wipe                             |
+| Verdict slide   | 320ms    | On answer                                                       | Rises 24dp and fades in                        |
+| Verdict plate   | 400ms    | 120ms                                                           | Left-to-right wipe                             |
 | Card fade       | 250ms    | On answer                                                       | Unused board cards fade to 28%                 |
 | Press           | spring   | —                                                               | Moves down 2dp, fill 12% brighter              |
 | Progress pulse  | 1.6s     | Looping                                                         | Current segment only, opacity 100% to 45%      |
