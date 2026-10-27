@@ -206,3 +206,30 @@ Use the same setup and verification commands as local development:
 ```bash
 pnpm check
 ```
+
+## CI and repository access
+
+The default branch is `dev`. Pushes to `dev` and pull requests targeting `dev`
+run `.github/workflows/pr.yaml`: formatting, lint, TypeScript, unit tests,
+integration tests, and builds. Pull requests also run the title check.
+The shared Node.js and pnpm setup follows Goho and uses this repository's
+versions and frozen lockfile.
+
+The repository is still a template. Turbo runs tasks only for packages that
+define them; a passing job does not mean an application has been built or tested.
+Keep root lint running through `pnpm lint`. Add Android checks, API contract
+checks, server integration tests, container builds, and deployment alongside
+their components.
+
+The [dev ruleset](https://github.com/adamaho/snapcall/rules/25924857) restricts
+branch updates, including pull request merges, to `adamaho`. That account has
+an always-allowed bypass, so it can also push directly to `dev`. The ruleset
+includes force-push and deletion protection, subject to the same owner bypass.
+`CODEOWNERS` assigns repository-wide code ownership to `@adamaho`; the ruleset
+is what restricts merging.
+
+[Interaction limits](https://github.com/adamaho/snapcall/settings/interaction_limits)
+allow prior contributors and collaborators to open issues and pull requests.
+GitHub applies this restriction to comments and reactions too. The current
+six-month limit expires on April 26, 2027 at 9:08 p.m. America/Toronto and must
+be renewed to keep it in effect.
