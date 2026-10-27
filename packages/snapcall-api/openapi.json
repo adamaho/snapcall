@@ -1,0 +1,69 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Snapcall API",
+    "version": "0.0.0",
+    "description": "The shared HTTP contract for the Snapcall server."
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["health"],
+        "operationId": "health.check",
+        "parameters": [],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/HealthData"
+                    }
+                  },
+                  "required": ["data"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        },
+        "description": "Confirms the server is running without querying the database or external services.",
+        "summary": "Check server liveness"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthData": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["ok"],
+            "description": "The server's liveness status."
+          }
+        },
+        "required": ["status"],
+        "additionalProperties": false,
+        "description": "Whether the server is running.",
+        "examples": [
+          {
+            "status": "ok"
+          }
+        ]
+      }
+    },
+    "securitySchemes": {}
+  },
+  "security": [],
+  "tags": [
+    {
+      "name": "health",
+      "description": "Server liveness."
+    }
+  ]
+}

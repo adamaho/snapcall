@@ -16,9 +16,11 @@ catalog:
   "@adamaho/nopeus-tsconfig": 0.3.2
   "@changesets/cli": 3.0.3
   "@effect/tsgo": 0.55.0
-  "@effect/vitest": 4.0.5
+  "@effect/platform-node": 4.0.6
+  "@effect/sql-pg": 4.0.6
+  "@effect/vitest": 4.0.6
   "@types/node": 24.19.2
-  effect: 4.0.5
+  effect: 4.0.6
   oxfmt: 0.74.0
   oxlint: 1.89.0
   rimraf: 6.1.3

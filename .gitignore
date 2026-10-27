@@ -1,6 +1,7 @@
 node_modules/
 .turbo/
 .vite/
+*.tsbuildinfo
 
 dist/
 build/

@@ -1,0 +1,7 @@
+{
+  "extends": "@snapcall/tool-tsconfig/program",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src/**/*.ts"]
+}

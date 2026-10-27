@@ -1,7 +1,6 @@
 # Contributing
 
-This repository is a template monorepo. Keep changes small, explicit, and easy
-to carry forward into future projects created from the template.
+Keep changes to Snapcall small, explicit, and easy to review.
 
 ## Prerequisites
 
@@ -24,10 +23,14 @@ Install dependencies:
 pnpm install --frozen-lockfile
 ```
 
-Start local infrastructure when a package needs shared runtime services:
+For the server, copy its `.env.example` to `.env` and run `pnpm server:dev`.
+Turbo starts PostgreSQL and runs migrations before starting the HTTP server. See
+the [server setup](programs/snapcall-server/CONTRIBUTING.md).
+
+Start local infrastructure independently when needed:
 
 ```bash
-pnpm --filter=@monorepo/infra-local run infra:up
+pnpm --filter=@snapcall/infra-local run infra:up
 ```
 
 ## Verification
@@ -39,14 +42,15 @@ completed change:
 pnpm check
 ```
 
-This runs the repository format check, then the root Oxlint configuration,
-then package-level TypeScript tasks through Turbo where packages define them.
+This runs formatting, then package-level lint, TypeScript checks, unit tests,
+and OpenAPI contract checks through Turbo. Database integration tests run
+separately with `TEST_DATABASE_URL`.
 
 Useful focused commands:
 
 - `pnpm fmt` formats the repository
 - `pnpm fmt:check` checks formatting without writing changes
-- `pnpm lint` checks the repository with the root Oxlint configuration
+- `pnpm lint` runs package lint tasks through Turbo
 - `pnpm turbo run test:unit` runs package unit test tasks through Turbo
 - `pnpm tsc` runs package TypeScript tasks through Turbo
 
@@ -67,7 +71,7 @@ when it becomes shared or needs an explicit public API and dependency boundary.
 Do not apply category-based prefixes or suffixes to packages under `packages/*`.
 The directory name must match the package's `package.json` name, excluding the
 npm scope when present. For example, `packages/billing/package.json` uses the
-name `@monorepo/billing`.
+name `@snapcall/billing`.
 
 ## Package Imports
 
@@ -98,7 +102,7 @@ version. Keep inter-package imports on workspace package names and their public
 `exports`; aliases are private to the package declaring them. Do not introduce
 TypeScript-only `paths` mappings or duplicate aliases in test/bundler config.
 
-Use the shared `service` (NodeNext) or `app-vite` (bundler) TypeScript preset,
+Use the shared `program` (NodeNext) or `app-vite` (bundler) TypeScript preset,
 which enables `resolvePackageJsonImports`. Include `test/**/*.ts` and set
 `rootDir` to `.` when type-checking tests alongside source. Node.js 24 runs
 source `.ts` entry points directly; Vitest and Vite resolve the same imports
@@ -188,12 +192,12 @@ Allowed types:
 - `test`
 
 Use the affected package name without the npm scope as the commit scope. For
-root-only template changes, use `monorepo`.
+root-only project changes, use `snapcall`.
 
 Examples:
 
 ```text
-chore(monorepo): add contributor documentation
+chore(snapcall): add contributor documentation
 feat(web): add account settings page
 fix(api): validate missing request body
 ```
@@ -215,11 +219,12 @@ integration tests, and builds. Pull requests also run the title check.
 The shared Node.js and pnpm setup follows Goho and uses this repository's
 versions and frozen lockfile.
 
-The repository is still a template. Turbo runs tasks only for packages that
-define them; a passing job does not mean an application has been built or tested.
-Keep root lint running through `pnpm lint`. Add Android checks, API contract
-checks, server integration tests, container builds, and deployment alongside
-their components.
+The API and server now run lint and TypeScript checks. Server unit tests verify
+HTTP behavior; integration tests use an isolated PostgreSQL schema and the real
+migrator. CI also checks that the committed OpenAPI contract is current.
+Android, container builds, and deployment will be added with those components.
+The build job still has no build tasks: Node.js runs the server TypeScript
+directly, following Goho.
 
 The [dev ruleset](https://github.com/adamaho/snapcall/rules/25924857) restricts
 branch updates, including pull request merges, to `adamaho`. That account has

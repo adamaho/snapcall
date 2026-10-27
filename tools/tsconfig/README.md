@@ -1,12 +1,13 @@
-# @monorepo/tool-tsconfig
+# @snapcall/tool-tsconfig
 
 Shared TypeScript configurations for this Turborepo.
 
 ## Exports
 
-- `@monorepo/tool-tsconfig/base`: strict baseline compiler defaults.
-- `@monorepo/tool-tsconfig/service`: NodeNext defaults and Effect diagnostics for services.
-- `@monorepo/tool-tsconfig/app-vite`: bundler and React defaults for Vite workspaces.
+- `@snapcall/tool-tsconfig/base`: strict baseline compiler defaults.
+- `@snapcall/tool-tsconfig/program`: NodeNext defaults and Effect diagnostics.
+- `@snapcall/tool-tsconfig/service`: equivalent service preset retained from the template.
+- `@snapcall/tool-tsconfig/app-vite`: bundler and React defaults for Vite workspaces.
 
 The presets extend `@adamaho/nopeus-tsconfig` from the workspace catalog.
 The Effect preset disables `unstableApiUsage` diagnostics so services can
@@ -24,12 +25,12 @@ TypeScript compiler with the catalog's `@effect/tsgo` version via this package's
     "#src/*": "./src/*"
   },
   "devDependencies": {
-    "@monorepo/tool-tsconfig": "workspace:*"
+    "@snapcall/tool-tsconfig": "workspace:*"
   }
 }
 ```
 
-Both `service` and `app-vite` resolve package-local aliases from `package.json`.
+The `program`, `service`, and `app-vite` presets resolve package-local aliases from `package.json`.
 Use imports such as `#src/billing/calculate-total.ts` with explicit TypeScript
 extensions. Add `#test/*` only when a `test` folder exists. See the
 [package import conventions](../../CONTRIBUTING.md#package-imports) for tests,
@@ -39,7 +40,7 @@ workspace boundaries, and build output requirements.
 
 ```json
 {
-  "extends": "@monorepo/tool-tsconfig/service",
+  "extends": "@snapcall/tool-tsconfig/program",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src"

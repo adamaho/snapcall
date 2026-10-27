@@ -1,0 +1,32 @@
+{
+  "name": "@snapcall/snapcall-api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared Snapcall HTTP API contract and public schemas.",
+  "type": "module",
+  "imports": {
+    "#src/*": "./src/*"
+  },
+  "exports": {
+    "./api": "./src/api.ts",
+    "./response": "./src/response.ts"
+  },
+  "scripts": {
+    "clean": "rimraf node_modules dist build .turbo coverage",
+    "lint": "oxlint .",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@adamaho/nopeus-oxlint-config": "catalog:",
+    "@adamaho/nopeus-oxlint-plugin": "catalog:",
+    "@snapcall/tool-tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "rimraf": "catalog:",
+    "typescript": "catalog:"
+  }
+}
