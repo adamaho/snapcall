@@ -8,7 +8,9 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - Sizes: board 54×76dp with 5dp corners; hole 64×88dp with 7dp corners. Shadows as in `tokens.md`.
 - `highlighted`: a 3dp `right` outline at a 2dp offset. Use it for the cards that make the hand, or the helpful cards in a probability puzzle.
 - `faded`: 28% opacity, for board cards that play no part once the answer is shown.
-- Announce as "King of spades". Cards are not interactive.
+- `selected`: lifted 10dp with a 3dp `textPrimary` outline at a 2dp offset, while the player is picking.
+- `wrongPick`: a 3dp `wrong` outline, for a picked card that is not in the best five once the pick is locked in.
+- Announce as "King of spades", adding ", selected" while selected. Cards are only interactive inside a `CardPicker`.
 
 ## InlineCard
 
@@ -45,16 +47,16 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - `StreetLabels` sit 30dp from the top of the table, above the board, in `label` style and `textMuted`, each underlined with a 2dp `outline` rule. FLOP spans the first three card columns; TURN and RIVER span one each.
 - The board row is centered 54dp from the top. The two hole cards are centered 148dp from the top, so they overlap the table's lower edge like the player's seat.
 
-## AnswerButton and AnswerGrid
+## CardPicker and LockInButton
 
-- `AnswerGrid` is a 2×2 grid of four `AnswerButton`s with 10dp gaps. Answers are lettered A to D in reading order.
-- An `AnswerButton` is 60dp tall with 4dp corners: `surface` fill, 1dp `outline` border, and a 34dp `surfaceKey` key plate holding the letter on the left, square on its inner edge. The label is in `answer` style.
-- `AnswerState`:
-  - `Idle`: as above, tappable.
-  - `Right`: `right` fill and border, `onLight` label with a trailing check, inverted key plate (`onLight` fill, `right` letter).
-  - `Wrong`: `wrong` fill, `onLight` label with a strike-through, inverted key plate (`onLight` fill, `wrong` letter).
-  - `Dimmed`: other answers, with `textDim` labels.
-- After one answer the grid locks. The answer's state is announced, for example "Flush, wrong. Straight is right."
+How the player answers a hand-strength puzzle. There is no multiple choice: the answer is the five cards themselves.
+
+- `CardPicker` makes the seven cards on the `PokerTable` (five board, two hole) toggleable. A tap selects or deselects a card (`selected`). Once five are selected, further taps on unselected cards do nothing until one is deselected.
+- `LockInButton` is pinned to the bottom of the screen, 60dp tall and full width, with 4dp corners and an `answer` style label. With fewer than five cards selected it is disabled: `surface` fill, 1dp `outline` border, `textDim` label counting the pick ("3 of 5 picked"). With five it reads `Lock in` with a `textPrimary` fill and `onLight` label.
+- There is no prompt line or separate counter; the lifted cards and the button carry it.
+- On lock in, the picker locks. Cards in the best five get the `right` outline, selected cards outside it get `wrongPick`, and the rest fade to 28%. The `VerdictPanel` replaces the `LockInButton`.
+- The pick is right when it ties the best hand (same category and kickers), even if it uses different cards.
+- Announce the result, for example "King high, wrong. Your best hand is a straight."
 
 ## ActionButton
 
@@ -65,11 +67,10 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 ## VerdictPanel
 
-- A `surface` card with a 1dp `outline` border, 8dp corners and 16dp padding, placed directly above the `AnswerGrid` with an 18dp gap. It slides up 24dp and fades in on answer, and never covers the answers.
-- Right answers get no plate: the highlighted answer already shows what was right.
-- Wrong answers start with a `Wrong` plate naming the mistake, such as `Not a flush`, 36dp tall.
+- A `surface` card with a 1dp `outline` border, 8dp corners and 16dp padding, pinned to the bottom of the screen in place of the `LockInButton`. It slides up 24dp and fades in on lock in, and never covers the table.
+- It starts with a 36dp plate naming the hand the player built: a `Right` plate for a right pick (`Straight, king high`), or a `Wrong` plate for a wrong one (`King high`).
 - Body: one or two `body` sentences that name the exact cards as `InlineCard`s.
-- A primary `ActionButton`, 52dp tall inside the card, closes it: `Got it` after a wrong answer, `Next hand` after a right one.
+- A primary `ActionButton`, 52dp tall inside the card, closes it: `Got it` after a wrong pick, `Next hand` after a right one.
 
 ## StarRow
 

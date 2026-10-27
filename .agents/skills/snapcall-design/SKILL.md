@@ -23,14 +23,14 @@ Blue and orange were chosen over green and red so colorblind players can tell th
 
 ## Component names
 
-Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`, `InlineCard`, `Plate`, `PlateChain`, `ModuleBreadcrumb`, `RoundProgress`, `CloseButton`, `PokerTable`, `StreetLabels`, `AnswerButton`, `AnswerGrid`, `ActionButton`, `VerdictPanel`, `StarRow` and `HandRecapRow`. Use the same convention for component-specific types (`AnswerState`, `PlateColor`) and matching filenames. See [references/components.md](references/components.md).
+Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`, `InlineCard`, `Plate`, `PlateChain`, `ModuleBreadcrumb`, `RoundProgress`, `CloseButton`, `PokerTable`, `StreetLabels`, `CardPicker`, `LockInButton`, `ActionButton`, `VerdictPanel`, `StarRow` and `HandRecapRow`. Use the same convention for component-specific types (`CardState`, `PlateColor`) and matching filenames. See [references/components.md](references/components.md).
 
 ## Typography
 
 **Geist** sets all interface text. **Instrument Serif** appears only on card ranks, where it echoes classic playing-card indices and keeps the cards feeling like real cards. Both are SIL Open Font License families. The app already bundles Geist Regular, Medium and SemiBold; add Geist Bold (700) and Instrument Serif Regular (400).
 
-- Geist Bold, in sentence case with tight tracking: the question, verdicts and the score.
-- Geist SemiBold: the hand name, recap hand names, answers and buttons in sentence case, and chips and labels in small tracked caps.
+- Geist Bold, in sentence case with tight tracking: tutorial titles, verdicts and the score.
+- Geist SemiBold: the hand name, recap hand names, the Lock in button and other buttons in sentence case, and chips and labels in small tracked caps.
 - Geist Regular: corrections and other body text.
 - Instrument Serif Regular: card ranks only. Never use it anywhere else, and never fake bold or italic on it. Apply the sizes, weights and tracking in [references/tokens.md](references/tokens.md#type).
 
@@ -42,13 +42,14 @@ Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`,
 4. **Flat plates, no angles.** Labels, chips and verdicts sit on flat rectangular plates with 4dp corners. Never slant, skew or clip them into parallelograms. Buttons also have 4dp corners and cards have 5–7dp corners. Only the close button is round.
 5. **No ripples.** Press feedback moves the control down 2dp and brightens its fill slightly, then springs back. Use `indication = null` with the press modifier.
 6. **Dark only, for now.** Broadcast is designed as a dark studio. A light theme is not designed; ask before adding one.
-7. **Motion teaches or celebrates.** Deal-in by street, the verdict slide, the plate wipe and the star pop are the only animations. Everything else is static, and all of it snaps when "Remove animations" is on.
+7. **Motion teaches or celebrates.** Deal-in by street, the card lift on selection, the verdict slide, the plate wipe and the star pop are the only animations. Everything else is static, and all of it snaps when "Remove animations" is on.
 
 ## Scope: build only what is decided
 
 The product decisions so far, which the specs follow:
 
 - Hand strength is the only launch module. Modules are freely selectable with independent difficulty, and a placement round is required on first entry.
+- Hand-strength puzzles have no multiple choice. The player taps the five cards that make their best hand and locks in, so the answer is exact (which pair, which kicker). Any five that ties the best hand counts as right.
 - A regular round has five situations. A wrong answer gets a quick correction and the round moves on; missed hands are not repeated within the round. Retrying replays the whole round with five new hands (different permutations).
 - Puzzles progress from identifying hands, to comparing players' hands, to finding hands that beat yours.
 - Probability puzzles offer four percentages, then highlight the helpful cards and briefly show the math. They start with improving on the next card; flop probabilities come at higher difficulties.

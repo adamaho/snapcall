@@ -8,7 +8,7 @@ All values are dp or sp. Broadcast is a dark design; there is no light palette y
 | --------------- | --------- | ----------------------------------------------------------------------- |
 | `background`    | `#141414` | Screen background ("studio")                                            |
 | `spotlight`     | `#202020` | Center of the radial spotlight behind the table, fading to `background` |
-| `surface`       | `#1E1E1E` | Answer buttons, panel plates, verdict panel, recap rows                 |
+| `surface`       | `#1E1E1E` | Disabled Lock in button, panel plates, verdict panel, recap rows        |
 | `surfaceKey`    | `#2A2A2A` | A–D key plates and recap number plates                                  |
 | `outline`       | `#303030` | 1dp borders, table rim, street underlines, upcoming progress segments   |
 | `tableFelt`     | `#181818` | Edge of the table's radial fill                                         |
@@ -16,12 +16,12 @@ All values are dp or sp. Broadcast is a dark design; there is no light palette y
 | `textPrimary`   | `#F2F2F2` | Primary text, primary button fill, light plates, done progress, stars   |
 | `textSecondary` | `#B8B8B8` | Secondary body text                                                     |
 | `textMuted`     | `#9E9E9E` | Labels, street names, secondary captions                                |
-| `textDim`       | `#8C8C8C` | Answers that were not picked, once answered                             |
+| `textDim`       | `#8C8C8C` | Disabled Lock in label ("3 of 5 picked")                                |
 | `onLight`       | `#141414` | Text on light, `right` and `wrong` fills                                |
 | `card`          | `#FFFFFF` | Card faces only                                                         |
 | `cardInk`       | `#141414` | Spades and clubs, card ranks                                            |
 | `suitRed`       | `#D7263D` | Hearts and diamonds                                                     |
-| `right`         | `#4CC3FF` | Right answers, cards that make the hand, helpful cards, recap checks    |
+| `right`         | `#4CC3FF` | Right picks, cards that make the hand, helpful cards, recap checks      |
 | `wrong`         | `#E5672A` | Wrong picks, wrong verdicts, recap X marks                              |
 | `scrim`         | black 50% | Card and panel shadows                                                  |
 
@@ -42,9 +42,9 @@ Contrast, measured from the opaque sRGB pairs:
 | ------------ | -------------------- | ------------------ | -------- | ----------------------------------------- |
 | `title`      | Geist 700            | 30 / 33            | −0.02em  | Tutorial step titles, sentence case       |
 | `score`      | Geist 700            | 88 / 80            | −0.04em  | Round-complete score                      |
-| `verdict`    | Geist 700            | 20 / 36            | 0        | Wrong verdict plate, sentence case        |
+| `verdict`    | Geist 700            | 20 / 36            | 0        | Verdict plate, sentence case              |
 | `handName`   | Geist 600            | 16 / 30            | 0        | Hand names in recap rows                  |
-| `answer`     | Geist 600            | 18 / 24            | 0        | Answer buttons, sentence case             |
+| `answer`     | Geist 600            | 18 / 24            | 0        | Lock in button, sentence case             |
 | `button`     | Geist 600            | 16 / 24            | 0        | Action buttons, sentence case             |
 | `breadcrumb` | Geist 500            | 14 / 20            | 0        | Header breadcrumb, sentence case          |
 | `chip`       | Geist 600            | 13 / 32            | 0.06em   | Small caps plates, when one is needed     |
@@ -57,7 +57,7 @@ Use tabular figures for scores, counts and odds so numbers do not shift while an
 ## Shape
 
 - Plates: flat rectangles with 4dp corners and 12–16dp side padding. Never slanted. Chained plates sit 4dp apart (6dp for the verdict chain).
-- Buttons and answer buttons: 4dp corners.
+- Buttons: 4dp corners.
 - Cards: 5dp board, 7dp hole.
 - Table: a full oval.
 - Close button: fully round.
@@ -67,7 +67,7 @@ Use tabular figures for scores, counts and odds so numbers do not shift while an
 - Screen margin: 20dp. Vertical gap between sections: 18dp.
 - Board cards: 54×76dp with 6dp gaps (294dp row). Hole cards: 64×88dp with 4dp gaps, tilted −6° and +5° (the second also drops 5dp).
 - Table: 190dp tall, extending 6dp past the screen margin on each side. The board sits 54dp from its top; the hole cards sit 148dp from its top, overlapping its lower edge.
-- Answer buttons: 60dp tall in a 2×2 grid with 10dp gaps. Key plate: 34dp wide.
+- Lock in button: 60dp tall, full width. Selected cards lift 10dp.
 - Action buttons: 56dp primary, 48dp secondary.
 - Progress segments: 4dp tall with 4dp gaps.
 - Close button: 44dp.
@@ -86,10 +86,11 @@ Ease out with `cubic-bezier(0.2, 0.8, 0.2, 1)` unless noted. With "Remove animat
 | Motion         | Duration | Delay                                                           | Notes                                          |
 | -------------- | -------- | --------------------------------------------------------------- | ---------------------------------------------- |
 | Deal-in        | 420ms    | Flop 100, 180, 260ms; turn 500ms; river 740ms; hole 950, 1050ms | From 36dp above, 92% scale, transparent        |
-| Verdict slide  | 320ms    | On answer                                                       | Rises 24dp and fades in                        |
+| Card lift      | 160ms    | On tap                                                          | Selected card rises 10dp; reverses on deselect |
+| Verdict slide  | 320ms    | On lock in                                                      | Rises 24dp and fades in                        |
 | Tutorial step  | 300ms    | On Next                                                         | Slides in 24dp from the right                  |
 | Verdict plate  | 400ms    | 120ms                                                           | Left-to-right wipe                             |
-| Card fade      | 250ms    | On answer                                                       | Unused board cards fade to 28%                 |
+| Card fade      | 250ms    | On lock in                                                      | Cards outside the best five fade to 28%        |
 | Press          | spring   | —                                                               | Moves down 2dp, fill 12% brighter              |
 | Progress pulse | 1.6s     | Looping                                                         | Current segment only, opacity 100% to 45%      |
 | Star pop       | 500ms    | 250ms, then every 220ms                                         | Scale from 0 with −30° turn, overshoot to 118% |

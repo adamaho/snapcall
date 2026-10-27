@@ -9,7 +9,7 @@ Shown once, before the player's first round in a module, so the puzzle screens n
 - **Header**: `CloseButton` and the `ModuleBreadcrumb` ending in `How it works`.
 - **Illustration**, centered in the free space, 230dp tall:
   1. A small `PokerTable` with five board cards and two hole cards outlined in `right`. Title "The table": "The five cards in the middle are shared. The two at the bottom are yours."
-  2. A 2×2 `AnswerGrid` with the right answer shown. Title "Find your best hand": "Use any five of the seven cards. Tap the strongest hand you can make."
+  2. The seven cards in a row (42×58dp) with the best five `selected` and the other two at 40% opacity, above a `Lock in` button. Title "Find your best hand": "Use any five of the seven cards. Tap the five that make your strongest hand, then lock in."
   3. Two of three stars above five recap rows, each ending in a `right` check or a `wrong` X. Title "Earn your stars": "Each round is five hands, and your score earns up to three stars. Retry a round any time to play five new hands."
 - **Text**, centered: a `label` line (`STEP 1 OF 3`), the title in `title` style, then `body` in `textSecondary`.
 - **Step dots** above the button: 6dp dots in `outline`, with the current step a 20dp `textPrimary` pill.
@@ -19,7 +19,7 @@ Placement round details are undecided; the tutorial does not describe them.
 
 ## 2. Hand-strength puzzle (table view)
 
-The approved layout for every hand-strength situation. The sample situation: hole K♠ Q♠, board J♠ 10♦ 4♠ 9♣ 2♥, answers Pair, Two pair, Straight and Flush. Straight is right, and Flush is the trap because there are only four spades.
+The approved layout for every hand-strength situation. The sample situation: hole K♠ Q♠, board J♠ 10♦ 4♠ 9♣ 2♥. The best five are K♠ Q♠ J♠ 10♦ 9♣ for a straight, and the four spades are the trap.
 
 **Background**: `background` with a radial `spotlight` centered about 42% down the screen.
 
@@ -30,13 +30,13 @@ The approved layout for every hand-strength situation. The sample situation: hol
 
 **Table**: 48dp below the progress bar, the `PokerTable` with `StreetLabels`, five board cards and two tilted hole cards (see components.md). There is no question heading: the tutorial explains the game type once, and the breadcrumb names it. For situations before the river, leave the missing streets' columns empty and keep their labels.
 
-**Answers**: the `AnswerGrid`, pinned to the bottom of the screen above the navigation bar inset, so it sits under the thumb. Flexible space separates it from the table.
+**Answer**: the player taps five cards on the table (`CardPicker`), then the `LockInButton`, pinned to the bottom of the screen above the navigation bar inset so it sits under the thumb. Flexible space separates it from the table. There is no prompt or counter.
 
 ### States
 
-- **Question**: cards deal in by street, then the hole cards. Answers are idle. Nothing else moves except the progress pulse.
-- **Answered right**: the picked answer turns `Right`, and the others dim. The cards that make the hand get the `right` outline, and unused board cards fade. The `VerdictPanel` slides in above the answers with no plate, just the explanation, such as "[K♠ Q♠ J♠ 10♦ 9♣] in a row. The four spades were bait, there's no flush here." and `Next hand`.
-- **Answered wrong**: the picked answer turns `Wrong`, the right answer turns `Right`, and the others dim. Card highlighting is the same as for a right answer. The `VerdictPanel` names the mistake, such as "Four spades isn't enough, a flush needs five. Your best five cards are [K♠ Q♠ J♠ 10♦ 9♣] for a straight." (bracketed cards are `InlineCard`s) It ends with `Got it`.
+- **Picking**: cards deal in by street, then the hole cards. Tapped cards lift and get the white outline; the button counts the pick and turns into `Lock in` at five. Nothing else moves except the progress pulse.
+- **Right pick**: the five cards get the `right` outline and the other two fade. The `VerdictPanel` replaces the button with a `Right` plate naming the hand (`Straight, king high`), the explanation "Five in a row. The four spades were bait, there's no flush here." and `Next hand`.
+- **Wrong pick**: the best five get the `right` outline, picked cards outside them get the `wrong` outline, and the rest fade. The `VerdictPanel` opens with a `Wrong` plate naming the hand the player built (`King high`), then "You picked king high. Your best five are [K♠ Q♠ J♠ 10♦ 9♣] for a straight." (bracketed cards are `InlineCard`s) It ends with `Got it`.
 
 A missed hand is not repeated within the round. Retrying means replaying the whole round: five new hands, dealt as different permutations of the same skills.
 

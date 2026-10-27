@@ -35,7 +35,7 @@ data class SnapcallColors(
     val card: Color,
     val cardInk: Color,
     val suitRed: Color,
-    val right: Color, // right answers and teaching highlights only
+    val right: Color, // right picks and teaching highlights only
     val wrong: Color, // wrong picks and missed hands only
     val scrim: Color,
 )
@@ -151,9 +151,8 @@ object SnapcallSpacing {
     val tableBleed = 6.dp
     val boardTop = 54.dp
     val holeTop = 148.dp
-    val answerHeight = 60.dp
-    val answerGap = 10.dp
-    val answerKeyWidth = 34.dp
+    val lockInHeight = 60.dp
+    val cardLift = 10.dp
     val primaryButtonHeight = 56.dp
     val secondaryButtonHeight = 48.dp
     val progressHeight = 4.dp
