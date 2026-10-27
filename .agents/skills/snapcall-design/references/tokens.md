@@ -21,8 +21,8 @@ All values are dp or sp. Broadcast is a dark design; there is no light palette y
 | `card`          | `#FFFFFF` | Card faces only                                                         |
 | `cardInk`       | `#141414` | Spades and clubs, card ranks                                            |
 | `suitRed`       | `#D7263D` | Hearts and diamonds                                                     |
-| `right`         | `#4CC3FF` | Right answers, cards that make the hand, helpful cards, "First try"     |
-| `wrong`         | `#E5672A` | Wrong picks, wrong verdicts, "Retried"                                  |
+| `right`         | `#4CC3FF` | Right answers, cards that make the hand, helpful cards, recap checks    |
+| `wrong`         | `#E5672A` | Wrong picks, wrong verdicts, recap X marks                              |
 | `scrim`         | black 50% | Card and panel shadows                                                  |
 
 `right` and `wrong` are the only hues in the interface. They differ in lightness as well as hue, and every use pairs them with an icon, strike-through or label.
@@ -47,7 +47,7 @@ Contrast, measured from the opaque sRGB pairs:
 | `answer`     | Geist 600            | 18 / 24            | 0        | Answer buttons, sentence case             |
 | `button`     | Geist 600            | 16 / 24            | 0        | Action buttons, sentence case             |
 | `breadcrumb` | Geist 500            | 14 / 20            | 0        | Header breadcrumb, sentence case          |
-| `chip`       | Geist 600            | 13 / 32            | 0.06em   | Chained plates such as `FIRST TRY`, caps  |
+| `chip`       | Geist 600            | 13 / 32            | 0.06em   | Small caps plates, when one is needed     |
 | `label`      | Geist 600            | 11 / 16            | 0.14em   | Street names, section labels, notes, caps |
 | `cardRank`   | Instrument Serif 400 | 30 board, 37 hole  | 0        | Card ranks only                           |
 | `body`       | Geist 400            | 16 / 23            | 0        | Corrections, one or two sentences         |

@@ -36,7 +36,7 @@ data class SnapcallColors(
     val cardInk: Color,
     val suitRed: Color,
     val right: Color, // right answers and teaching highlights only
-    val wrong: Color, // wrong picks and retried hands only
+    val wrong: Color, // wrong picks and missed hands only
     val scrim: Color,
 )
 

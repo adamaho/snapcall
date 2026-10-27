@@ -38,7 +38,7 @@ The approved layout for every hand-strength situation. The sample situation: hol
 - **Answered right**: the picked answer turns `Right`, and the others dim. The cards that make the hand get the `right` outline, and unused board cards fade. The `VerdictPanel` slides in above the answers with no plate, just the explanation, such as "K Q J 10 9 in a row. The four spades were bait, there's no flush here." and `Next hand`.
 - **Answered wrong**: the picked answer turns `Wrong`, the right answer turns `Right`, and the others dim. Card highlighting is the same as for a right answer. The `VerdictPanel` names the mistake, such as "Four spades isn't enough, a flush needs five. Your best five cards are K Q J 10 9: a straight." It adds the retry note and `Got it`.
 
-Wrong situations are retried before the round ends. A retried situation is the same screen; its result counts as a retry on the round-complete screen.
+Wrong situations are retried before the round ends. A retried situation is the same screen; the round-complete recap only shows whether each hand was right or missed.
 
 ## 3. Probability puzzle (planned)
 
@@ -54,7 +54,7 @@ Not yet designed beyond the decided behavior. Use the table view with four perce
 
 **Pass status**: a light plate with a check, `NEXT ROUND UNLOCKED`, when the score meets the minimum. The failing state is not designed yet, and the pass threshold is undecided; ask before designing it.
 
-**Recap**: a `label` header, `THE HANDS`, then five `HandRecapRow`s in round order. Below them, in `body` and `textSecondary`: "Hands like the one you retried will come back in later rounds."
+**Recap**: a `label` header, `THE HANDS`, then five `HandRecapRow`s in round order. Below them, in `body` and `textSecondary`: "Hands you missed will come back in later rounds."
 
 **Actions** at the bottom: primary `Next round`, then secondary `Replay this round`.
 

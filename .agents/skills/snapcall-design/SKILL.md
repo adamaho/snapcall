@@ -16,7 +16,7 @@ Think "poker broadcast graphics with the cards lit up", never "casino app" or "M
 Everything that is not a card is gray or white, so the cards are the brightest and most saturated thing on screen. Color is a teaching tool, never decoration:
 
 - **Blue (`right`) means right.** It marks the right answer, the cards that make the hand, and the probability puzzle's helpful cards.
-- **Orange (`wrong`) means wrong.** It marks a wrong pick, a wrong verdict and a retried hand.
+- **Orange (`wrong`) means wrong.** It marks a wrong pick, a wrong verdict and a missed hand in the recap.
 - Nothing else gets color. That includes primary buttons, the breadcrumb, progress, stars and pass status, which are all white or gray.
 
 Blue and orange were chosen over green and red so colorblind players can tell them apart. Every color state also has a second cue: a check, a strike-through or a label.

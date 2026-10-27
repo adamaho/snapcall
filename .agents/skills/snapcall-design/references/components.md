@@ -76,4 +76,4 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 - 42dp tall with 4dp corners: `surface` fill and a 1dp `outline` border, with a 30dp `surfaceKey` number plate on the left.
 - The hand name in `handName` style, sentence case.
-- A trailing chip: `FIRST TRY` with a 1dp `right` outline and `right` text, or `RETRIED` with a `wrong` fill, `onLight` text and a retry icon.
+- A trailing 20dp icon: a check in `right` for a hand answered right, or an X in `wrong` for a missed hand. Announce as "Right" or "Missed". Retries are not shown.
