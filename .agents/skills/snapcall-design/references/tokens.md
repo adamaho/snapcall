@@ -38,20 +38,20 @@ Contrast, measured from the opaque sRGB pairs:
 
 ## Type
 
-| Style      | Family               | Size / line height | Tracking | Use                                          |
-| ---------- | -------------------- | ------------------ | -------- | -------------------------------------------- |
-| `prompt`   | Instrument Serif 400 | 44 / 44            | 0        | Puzzle question, sentence case, centered     |
-| `score`    | Instrument Serif 400 | 104 / 88           | 0        | Round-complete score                         |
-| `verdict`  | Instrument Serif 400 | 30 / 44            | 0        | Verdict plate, sentence case                 |
-| `handName` | Instrument Serif 400 | 20 / 30            | 0        | Hand plate after an answer, recap hand names |
-| `answer`   | Inter 600            | 18 / 24            | 0        | Answer buttons, sentence case                |
-| `button`   | Inter 600            | 16 / 24            | 0        | Action buttons, sentence case                |
-| `chip`     | Inter 600            | 13 / 32            | 0.06em   | Module chip and chained plates, caps         |
-| `label`    | Inter 600            | 11 / 16            | 0.14em   | Street names, section labels, notes, caps    |
-| `cardRank` | Instrument Serif 400 | 30 board, 46 hole  | 0        | Card ranks                                   |
-| `body`     | Inter 400            | 16 / 23            | 0        | Corrections, one or two sentences            |
+| Style      | Family               | Size / line height | Tracking | Use                                       |
+| ---------- | -------------------- | ------------------ | -------- | ----------------------------------------- |
+| `prompt`   | Geist 700            | 32 / 35            | −0.02em  | Puzzle question, sentence case, centered  |
+| `score`    | Geist 700            | 88 / 80            | −0.04em  | Round-complete score                      |
+| `verdict`  | Geist 700            | 22 / 44            | 0        | Verdict plate, sentence case              |
+| `handName` | Geist 600            | 16 / 30            | 0        | Hand plate after an answer, recap rows    |
+| `answer`   | Geist 600            | 18 / 24            | 0        | Answer buttons, sentence case             |
+| `button`   | Geist 600            | 16 / 24            | 0        | Action buttons, sentence case             |
+| `chip`     | Geist 600            | 13 / 32            | 0.06em   | Module chip and chained plates, caps      |
+| `label`    | Geist 600            | 11 / 16            | 0.14em   | Street names, section labels, notes, caps |
+| `cardRank` | Instrument Serif 400 | 30 board, 46 hole  | 0        | Card ranks only                           |
+| `body`     | Geist 400            | 16 / 23            | 0        | Corrections, one or two sentences         |
 
-Use tabular figures for scores, counts and odds so numbers do not shift while animating. Instrument Serif has a single weight; never fake bold or italic on it, and keep it at 20sp or larger.
+Use tabular figures for scores, counts and odds so numbers do not shift while animating. Instrument Serif is for card ranks only and has a single weight; never fake bold or italic on it.
 
 ## Shape
 

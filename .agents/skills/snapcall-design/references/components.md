@@ -76,5 +76,5 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 ## HandRecapRow
 
 - 42dp tall with 4dp corners: `surface` fill and a 1dp `outline` border, with a 30dp `surfaceKey` number plate on the left.
-- The hand name in `handName` style at 21sp, sentence case.
+- The hand name in `handName` style, sentence case.
 - A trailing chip: `FIRST TRY` with a 1dp `right` outline and `right` text, or `RETRIED` with a `wrong` fill, `onLight` text and a retry icon.

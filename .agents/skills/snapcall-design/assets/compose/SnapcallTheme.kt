@@ -1,7 +1,7 @@
 // Snapcall Broadcast design tokens for Jetpack Compose.
 // Reference implementation from the October 27, 2026 design handoff. It has not
 // been compiled: merge it into programs/snapcall-android/.../theme/ and add the
-// Instrument Serif and Inter font resources it names.
+// Geist Bold and Instrument Serif font resources it names.
 package com.adamaho.snapcall.theme
 
 import androidx.compose.animation.core.CubicBezierEasing
@@ -66,17 +66,18 @@ val SnapcallBroadcastColors =
 
 val InstrumentSerif = FontFamily(Font(R.font.instrument_serif_regular, FontWeight.Normal))
 
-val Inter =
+val Geist =
     FontFamily(
-        Font(R.font.inter_regular, FontWeight.Normal),
-        Font(R.font.inter_semibold, FontWeight.SemiBold),
-        Font(R.font.inter_bold, FontWeight.Bold),
+        Font(R.font.geist_regular, FontWeight.Normal),
+        Font(R.font.geist_medium, FontWeight.Medium),
+        Font(R.font.geist_semibold, FontWeight.SemiBold),
+        Font(R.font.geist_bold, FontWeight.Bold),
     )
 
 private const val TABULAR_NUMBERS = "'tnum' 1"
 
-// Instrument Serif has one weight: never fake bold or italic on it, and keep it at 20sp or larger.
-private fun serif(size: Int, lineHeight: Int) =
+// Card ranks only. Instrument Serif has one weight: never fake bold or italic on it.
+private fun rank(size: Int, lineHeight: Int) =
     TextStyle(
         fontFamily = InstrumentSerif,
         fontWeight = FontWeight.Normal,
@@ -88,7 +89,7 @@ private fun serif(size: Int, lineHeight: Int) =
 
 private fun sans(weight: FontWeight, size: Int, lineHeight: Int, tracking: Double = 0.0) =
     TextStyle(
-        fontFamily = Inter,
+        fontFamily = Geist,
         fontWeight = weight,
         fontSize = size.sp,
         lineHeight = lineHeight.sp,
@@ -114,16 +115,16 @@ data class SnapcallTypography(
 
 val SnapcallType =
     SnapcallTypography(
-        prompt = serif(44, 44),
-        score = serif(104, 88),
-        verdict = serif(30, 44),
-        handName = serif(20, 30),
+        prompt = sans(FontWeight.Bold, 32, 35, -0.02),
+        score = sans(FontWeight.Bold, 88, 80, -0.04),
+        verdict = sans(FontWeight.Bold, 22, 44),
+        handName = sans(FontWeight.SemiBold, 16, 30),
         answer = sans(FontWeight.SemiBold, 18, 24),
         button = sans(FontWeight.SemiBold, 16, 24),
         chip = sans(FontWeight.SemiBold, 13, 32, 0.06),
         label = sans(FontWeight.SemiBold, 11, 16, 0.14),
-        cardRankBoard = serif(30, 28),
-        cardRankHole = serif(46, 42),
+        cardRankBoard = rank(30, 28),
+        cardRankHole = rank(46, 42),
         body = sans(FontWeight.Normal, 16, 23),
     )
 

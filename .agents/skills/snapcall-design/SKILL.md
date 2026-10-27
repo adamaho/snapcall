@@ -7,7 +7,7 @@ description: Snapcall's Broadcast visual design system and screen specs for the 
 
 Design handoff: October 27, 2026 Broadcast direction, neutral palette, table view puzzle and end-of-round star screen. The written specs take precedence over the art board if they disagree.
 
-Snapcall is an Android-first poker puzzle game for cash-game No-Limit Hold'em. Rounds are short, like Duolingo, and players learn by playing rather than through lessons. The look is **Broadcast**: every puzzle feels like the hole-card camera on a late-night poker broadcast. That means a near-black neutral studio, bright white cards, Instrument Serif titles over Inter, and flat caption plates that slide in with the verdict.
+Snapcall is an Android-first poker puzzle game for cash-game No-Limit Hold'em. Rounds are short, like Duolingo, and players learn by playing rather than through lessons. The look is **Broadcast**: every puzzle feels like the hole-card camera on a late-night poker broadcast. That means a near-black neutral studio, bright white cards with serif ranks, Geist for everything else, and flat caption plates that slide in with the verdict.
 
 Think "poker broadcast graphics with the cards lit up", never "casino app" or "Material starter template".
 
@@ -27,13 +27,12 @@ Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`,
 
 ## Typography
 
-Titles are **Instrument Serif** and everything you read quickly is **Inter**. The serif ties Snapcall to the card room: classic card indices, casino and tournament marks. The sans keeps answers and corrections legible at a glance. Bundle Instrument Serif Regular (400) plus Inter Regular (400), SemiBold (600) and Bold (700); both are SIL Open Font License families from Google Fonts.
+**Geist** sets all interface text. **Instrument Serif** appears only on card ranks, where it echoes classic playing-card indices and keeps the cards feeling like real cards. Both are SIL Open Font License families. The app already bundles Geist Regular, Medium and SemiBold; add Geist Bold (700) and Instrument Serif Regular (400).
 
-- Instrument Serif, in sentence case: the question, verdicts, the hand name, the score, card ranks and recap hand names.
-- Inter SemiBold: answers and buttons in sentence case, and chips and labels in small tracked caps.
-- Inter Regular: corrections and other body text.
-
-Never set the serif in all caps, bold or italic, and never use it below 20sp. Apply the sizes, weights and tracking in [references/tokens.md](references/tokens.md#type).
+- Geist Bold, in sentence case with tight tracking: the question, verdicts and the score.
+- Geist SemiBold: the hand name, recap hand names, answers and buttons in sentence case, and chips and labels in small tracked caps.
+- Geist Regular: corrections and other body text.
+- Instrument Serif Regular: card ranks only. Never use it anywhere else, and never fake bold or italic on it. Apply the sizes, weights and tracking in [references/tokens.md](references/tokens.md#type).
 
 ## Non-negotiables
 
@@ -65,7 +64,7 @@ The product decisions so far, which the specs follow:
 
 ## How to work
 
-1. Read [references/tokens.md](references/tokens.md) and extend the existing app theme in `programs/snapcall-android/app/src/main/kotlin/com/adamaho/snapcall/theme/` with the tokens the screen needs. That theme still carries the starter palette and Geist; replace them as Broadcast screens are built rather than mixing the two. [assets/compose/SnapcallTheme.kt](assets/compose/SnapcallTheme.kt) is an uncompiled reference for the tokens.
+1. Read [references/tokens.md](references/tokens.md) and extend the existing app theme in `programs/snapcall-android/app/src/main/kotlin/com/adamaho/snapcall/theme/` with the tokens the screen needs. That theme still carries the starter palette; replace it as Broadcast screens are built rather than mixing the two. Keep its Geist family and add the Bold weight. [assets/compose/SnapcallTheme.kt](assets/compose/SnapcallTheme.kt) is an uncompiled reference for the tokens.
 2. Build the primitives in [references/components.md](references/components.md).
 3. Build screens from [references/screens.md](references/screens.md), which gives the layout top to bottom with measurements, copy, states and motion.
 4. Compare against the art board listed in [assets/mockups/README.md](assets/mockups/README.md). The written spec wins if they disagree.
