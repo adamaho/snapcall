@@ -148,8 +148,9 @@ object SnapcallSpacing {
     val buttonCorner = 4.dp
     val boardCardCorner = 5.dp
     val holeCardCorner = 7.dp
-    val plateSlant = 12.dp
-    val verdictSlant = 16.dp
+    val plateCorner = 4.dp
+    val plateGap = 4.dp
+    val verdictPlateGap = 6.dp
     val boardCardWidth = 54.dp
     val boardCardHeight = 76.dp
     val boardCardGap = 6.dp

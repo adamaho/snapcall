@@ -7,7 +7,7 @@ description: Snapcall's Broadcast visual design system and screen specs for the 
 
 Design handoff: October 27, 2026 Broadcast direction, neutral palette, table view puzzle and end-of-round star screen. The written specs take precedence over the art board if they disagree.
 
-Snapcall is an Android-first poker puzzle game for cash-game No-Limit Hold'em. Rounds are short, like Duolingo, and players learn by playing rather than through lessons. The look is **Broadcast**: every puzzle feels like the hole-card camera on a late-night poker broadcast. That means a near-black neutral studio, bright white cards, Barlow Condensed italic caps, and slanted caption plates that slide in with the verdict.
+Snapcall is an Android-first poker puzzle game for cash-game No-Limit Hold'em. Rounds are short, like Duolingo, and players learn by playing rather than through lessons. The look is **Broadcast**: every puzzle feels like the hole-card camera on a late-night poker broadcast. That means a near-black neutral studio, bright white cards, Barlow Condensed italic caps, and flat caption plates that slide in with the verdict.
 
 Think "poker broadcast graphics with the cards lit up", never "casino app" or "Material starter template".
 
@@ -34,7 +34,7 @@ Bundle Barlow Condensed SemiBold (600), Bold (700), ExtraBold (800) and ExtraBol
 1. **Use the tokens.** Every color, text style, shape, spacing value and motion spec comes from `SnapcallTheme`. Do not hard-code hex values, dp values or `MaterialTheme.typography` styles in screens.
 2. **Color only teaches.** Use `right` and `wrong` only for answer feedback and teaching highlights. Do not add a brand accent, felt green, gold, gradients beyond the studio spotlight, or decorative color.
 3. **Cards are real cards.** Use white faces, the rank top-left and the suit bottom-right. Draw suits as vector drawables, never emoji or `♠` text. Hearts and diamonds use `suitRed`; spades and clubs use `cardInk`.
-4. **Slanted plates, not pills.** Labels, chips and verdicts sit on plates with one angled edge. Buttons have 4dp corners and cards have 5–7dp corners. Only the close button is round.
+4. **Flat plates, no angles.** Labels, chips and verdicts sit on flat rectangular plates with 4dp corners. Never slant, skew or clip them into parallelograms. Buttons also have 4dp corners and cards have 5–7dp corners. Only the close button is round.
 5. **No ripples.** Press feedback moves the control down 2dp and brightens its fill slightly, then springs back. Use `indication = null` with the press modifier.
 6. **Dark only, for now.** Broadcast is designed as a dark studio. A light theme is not designed; ask before adding one.
 7. **Motion teaches or celebrates.** Deal-in by street, the verdict slide, the plate wipe and the star pop are the only animations. Everything else is static, and all of it snaps when "Remove animations" is on.

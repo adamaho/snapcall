@@ -55,7 +55,7 @@ Use tabular figures for scores, counts and odds so numbers do not shift while an
 
 ## Shape
 
-- Plates: one or both edges slanted by 10–16dp, depending on height (12dp at 32dp tall, 16dp at 44dp tall). Chained plates overlap by the slant.
+- Plates: flat rectangles with 4dp corners and 12–16dp side padding. Never slanted. Chained plates sit 4dp apart (6dp for the verdict chain).
 - Buttons and answer buttons: 4dp corners.
 - Cards: 5dp board, 7dp hole.
 - Table: a full oval.

@@ -12,9 +12,9 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 ## Plate and PlateChain
 
-- A `Plate` is a text label on a fill with a slanted trailing edge. A plate in the middle of a chain slants on both sides.
+- A `Plate` is a text label on a flat fill with 4dp corners. It is never slanted or skewed.
 - `PlateColor`: `Light` (`textPrimary` fill, `onLight` text), `Surface` (`surface` fill, `textPrimary` text), `Right` and `Wrong` (`onLight` text on the hue).
-- A `PlateChain` overlaps consecutive plates by the slant, so they read as one strip.
+- A `PlateChain` sets consecutive plates in a row 4dp apart (6dp for the verdict chain), so they read as one caption.
 - `ModuleChip` is the header's chain: a light `HAND STRENGTH` plate then a surface plate showing the round position (`HAND 3 OF 5`) or `ROUND COMPLETE`.
 
 ## RoundProgress
@@ -42,7 +42,7 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 ## AnswerButton and AnswerGrid
 
 - `AnswerGrid` is a 2×2 grid of four `AnswerButton`s with 10dp gaps. Answers are lettered A to D in reading order.
-- An `AnswerButton` is 60dp tall with 4dp corners: `surface` fill, 1dp `outline` border, and a 34dp `surfaceKey` key plate holding the letter on the left with an 8dp slant. The label is in `answer` style.
+- An `AnswerButton` is 60dp tall with 4dp corners: `surface` fill, 1dp `outline` border, and a 34dp `surfaceKey` key plate holding the letter on the left, square on its inner edge. The label is in `answer` style.
 - `AnswerState`:
   - `Idle`: as above, tappable.
   - `Right`: `right` fill and border, `onLight` label with a trailing check, inverted key plate (`onLight` fill, `right` letter).
