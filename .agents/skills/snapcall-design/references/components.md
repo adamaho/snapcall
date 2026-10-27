@@ -12,8 +12,8 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 ## InlineCard
 
-- Any card named in text (verdicts, corrections, tutorial copy) is an `InlineCard`, never letters like "K Q J". It is a 22dp-tall white `card` chip with 3dp corners and 4dp side padding, holding the rank in `cardRank` at 16sp and a 10dp suit, in `cardInk` or `suitRed`.
-- It sits on the text baseline (lowered 5dp) with 3dp between chips and a 2dp shadow. A run of cards does not wrap. Body text around inline cards uses a 1.6 line height so the chips don't crowd the lines.
+- Any card named in text (verdicts, corrections, tutorial copy) is an `InlineCard`, never letters like "K Q J". It is a 20dp-tall white `card` chip with 3dp corners and 5dp side padding, holding the rank in `cardRank` at 16sp and a 9dp suit 2dp apart, centered, in `cardInk` or `suitRed`.
+- It is centered on the line's cap height (baseline offset −3dp), with 2dp between chips and a 2dp shadow. A run of cards does not wrap. Body text around inline cards uses a 1.6 line height so the chips don't crowd the lines.
 - Announce each as "King of spades".
 
 ## Plate and PlateChain
