@@ -161,3 +161,39 @@ jobs:
 
       - name: Build packages and images
         run: pnpm turbo run build image
+
+  android:
+    name: android
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: programs/snapcall-android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build and lint
+        run: ./gradlew :app:assembleDevelopmentDebug :app:lintDevelopmentDebug --no-daemon
+
+      - name: Generated client check
+        run: |
+          ./gradlew :app:updateOpenApiClient --no-daemon
+          if [ -n "$(git status --porcelain --untracked-files=all -- app/src/main/kotlin/com/adamaho/snapcall/api/generated)" ]; then
+            git status --short --untracked-files=all -- app/src/main/kotlin/com/adamaho/snapcall/api/generated
+            exit 1
+          fi
+
+      - name: Android format check
+        run: ./gradlew :app:ktfmtCheck --no-daemon

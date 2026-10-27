@@ -2,7 +2,7 @@
 
 Android-first poker puzzles, built on a pnpm workspace with Effect. The current
 foundation includes the shared HTTP API contract, Node.js server, PostgreSQL
-setup, migrations, and automated checks.
+setup, migrations, a single-screen Android app, and CI checks.
 
 ## Start the server
 
@@ -25,12 +25,26 @@ curl http://127.0.0.1:3001/health
 Swagger UI is at `/docs`; the generated contract is at `/openapi.json`.
 `/health` reports server liveness, not database readiness.
 
+## Android app
+
+Open `programs/snapcall-android` in Android Studio and run `developmentDebug`, or:
+
+```bash
+cd programs/snapcall-android
+./gradlew :app:assembleDevelopmentDebug
+```
+
+The welcome screen supports system light/dark themes and needs no server.
+See the [Android setup guide](programs/snapcall-android/CONTRIBUTING.md) for
+installation, build variants, and client generation.
+
 ## Workspace
 
 - `clients/snapcall-server`: typed Effect client used by HTTP tests and consumers.
 - `packages/core`: shared PostgreSQL layers and pool integration tests.
 - `packages/snapcall-api`: shared Effect API contract and response schemas.
 - `programs/snapcall-server`: HTTP implementation, runtime, migrations, and tests.
+- `programs/snapcall-android`: native Compose app and generated Kotlin API client.
 - `infra/local`: isolated local PostgreSQL Compose project.
 - `tools/tsconfig`: shared TypeScript configuration.
 

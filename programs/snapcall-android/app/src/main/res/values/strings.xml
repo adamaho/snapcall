@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Snapcall</string>
+    <string name="snapcall_wordmark" translatable="false">Snapcall</string>
+    <string name="home_description">Build your poker instincts, one hand at a time.</string>
+</resources>

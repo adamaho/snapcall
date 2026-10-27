@@ -13,7 +13,9 @@
     "fmt:check": "oxfmt --check .",
     "tsc": "turbo run tsc",
     "test:unit": "turbo run test:unit",
-    "test:integration": "turbo run test:integration"
+    "test:integration": "turbo run test:integration",
+    "fmt:android": "cd programs/snapcall-android && ./gradlew :app:ktfmtFormat",
+    "fmt:check:android": "cd programs/snapcall-android && ./gradlew :app:ktfmtCheck"
   },
   "devDependencies": {
     "@adamaho/nopeus-oxfmt-config": "catalog:",

@@ -1,0 +1,34 @@
+Design one high-fidelity mobile puzzle screen for Snapcall, an Android-first poker learning game. This screen will establish the app's visual language before we build the first playable round.
+
+PRODUCT
+Snapcall teaches poker through short puzzles, repetition, and quick corrections. It should feel playful, confident, and welcoming to an adult who has never played poker. The product direction is punchy graphics with a slightly brutalist style. The emphasis is learning and recognizing patterns.
+
+DESIGN DIRECTION
+Create a distinctive, cohesive visual system with strong typography, bold geometric blocks, clear borders, and restrained hard shadows. Start with a warm off-white background, near-black text, and one vivid accent color. Give the playing cards and answer choices the strongest visual presence. Use generous spacing and a deliberate hierarchy. Geist is the current native app font; use it as the starting point. Keep the interface crisp and readable rather than ornamental. Avoid casino felt, gold luxury styling, neon gradients, decorative chip stacks, or money imagery.
+
+THE ONE SCREEN TO DESIGN
+A beginner five-card hand-recognition puzzle, shown after an answer has been selected but before it has been checked. Use a portrait Android canvas around 412 × 915 logical pixels, with realistic system bars and safe insets.
+
+Include this content:
+- A compact exit control at the top.
+- Round progress: "3 of 5", with a simple five-step progress indicator. Progress shows position in the round, not correctness.
+- A small context label: "Hand strength · Beginner".
+- The main question: "What hand is this?"
+- Supporting text: "Choose the name of this five-card hand."
+- Exactly these five cards, all readable at once: K♠, K♦, 8♣, 5♥, 2♠. This hand is one pair. Render ranks and suits accurately; the two kings must be unambiguous. Preserve the familiar red/black suit distinction and recognizable suit shapes.
+- Two large answer choices for this beginner example: "High card" and "One pair".
+- Show "One pair" as selected, using a clear border/fill plus a non-color selection indicator. Do not reveal whether it is correct yet.
+- A prominent, enabled "Check answer" button within easy thumb reach near the bottom.
+
+INTERACTION AND LEARNING CONTEXT
+A regular round contains five puzzles. Mistakes receive a quick correction and are retried for practice before the round ends. Only each puzzle's first answer counts toward that attempt's score. Players can replay whole rounds without limit, receiving new hands, and retain their best score.
+
+Stars are awarded for the whole round: 3/5 correct earns one star, 4/5 earns two, and 5/5 earns three. Do not award a star per puzzle. This screen should not include lives, energy, a countdown, a betting interface, or a results overlay.
+
+The two-choice layout and selected-answer state are design proposals for this exploration, not finalized puzzle-control requirements. Prioritize a clear, usable first version.
+
+ACCESSIBILITY AND CONSISTENCY
+Use touch targets of at least 48 logical pixels, strong text contrast, readable card ranks, and labels that remain clear with larger text. Distinguish selection through shape or an indicator as well as color. Make the hierarchy feel reusable across future puzzle types: progress, question, playing area, answer choices, and primary action.
+
+DELIVERABLE
+Produce one polished screen in the selected-but-not-checked state. Show the UI straight-on, without a device mockup, surrounding moodboard, or additional screens. If text notes are supported, briefly list the chosen colors, type scale, spacing, corner/border treatment, and selection style so we can reuse them in the native Compose app.

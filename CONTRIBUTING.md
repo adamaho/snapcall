@@ -206,13 +206,16 @@ The API and server now run lint and TypeScript checks. Server unit tests verify
 HTTP behavior; integration tests use an isolated PostgreSQL schema and the real
 migrator. CI also checks that the committed OpenAPI contract is current.
 The build job uses Docker Buildx and `pnpm turbo run build image`, following Goho.
-The server image runs migrations before starting the HTTP process. Android checks
-and production deployment will be added with those components.
+The server image runs migrations before starting the HTTP process. The Android
+job builds and lints `developmentDebug`, checks generated client drift, and runs
+ktfmt. Production deployment is separate.
 
 The workflow and test setup follow Goho `dev` at `eacb2535`: separate unit and
 integration jobs, package-owned Vitest configuration, a typed client under
 `clients/snapcall-server`, and shared PostgreSQL infrastructure under `packages/core`.
-Snapcall names and local ports differ; the Android job is omitted until the app exists.
+Snapcall names and local ports differ. The Android job now follows Goho too.
+See the [Android contributor guide](programs/snapcall-android/CONTRIBUTING.md)
+for SDK setup, build variants, and manual verification.
 
 The [dev ruleset](https://github.com/adamaho/snapcall/rules/25924857) restricts
 branch updates, including pull request merges, to `adamaho`. That account has
