@@ -10,6 +10,6 @@ The approved designs live on the [Snapcall art board](https://claude.ai/artifact
 - **Round complete · Stars**: the end-of-round screen at two stars. The board's Tweaks switch it between one, two and three stars.
 - **Brand · Broadcast**: the palette, type, parts and principles on one sheet.
 
-An earlier brutalist direction was rejected and removed from the board. Do not revive it. The board's "Type pairings" row shows the fonts that were compared; the final choice (October 27, 2026) is Geist for all interface text, with Instrument Serif only on card ranks.
+An earlier brutalist direction was rejected and removed from the board. Do not revive it. Type was settled on October 27, 2026: Geist for all interface text, with Instrument Serif only on card ranks.
 
 No PNG exports are committed yet. When they are, add them beside this file and list them here.
