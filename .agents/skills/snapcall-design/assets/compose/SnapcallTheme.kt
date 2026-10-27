@@ -1,7 +1,7 @@
 // Snapcall Broadcast design tokens for Jetpack Compose.
 // Reference implementation from the October 27, 2026 design handoff. It has not
 // been compiled: merge it into programs/snapcall-android/.../theme/ and add the
-// Barlow and Barlow Condensed font resources it names.
+// Instrument Serif and Inter font resources it names.
 package com.adamaho.snapcall.theme
 
 import androidx.compose.animation.core.CubicBezierEasing
@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -65,36 +64,31 @@ val SnapcallBroadcastColors =
 
 // ---------- Type ----------
 
-val BarlowCondensed =
-    FontFamily(
-        Font(R.font.barlow_condensed_semibold, FontWeight.SemiBold),
-        Font(R.font.barlow_condensed_bold, FontWeight.Bold),
-        Font(R.font.barlow_condensed_extrabold, FontWeight.ExtraBold),
-        Font(R.font.barlow_condensed_extrabold_italic, FontWeight.ExtraBold, FontStyle.Italic),
-    )
+val InstrumentSerif = FontFamily(Font(R.font.instrument_serif_regular, FontWeight.Normal))
 
-val Barlow =
+val Inter =
     FontFamily(
-        Font(R.font.barlow_regular, FontWeight.Normal),
-        Font(R.font.barlow_medium, FontWeight.Medium),
+        Font(R.font.inter_regular, FontWeight.Normal),
+        Font(R.font.inter_semibold, FontWeight.SemiBold),
+        Font(R.font.inter_bold, FontWeight.Bold),
     )
 
 private const val TABULAR_NUMBERS = "'tnum' 1"
 
-private fun display(size: Int, lineHeight: Int, tracking: Double = 0.0) =
+// Instrument Serif has one weight: never fake bold or italic on it, and keep it at 20sp or larger.
+private fun serif(size: Int, lineHeight: Int) =
     TextStyle(
-        fontFamily = BarlowCondensed,
-        fontWeight = FontWeight.ExtraBold,
-        fontStyle = FontStyle.Italic,
+        fontFamily = InstrumentSerif,
+        fontWeight = FontWeight.Normal,
         fontSize = size.sp,
         lineHeight = lineHeight.sp,
-        letterSpacing = tracking.em,
+        letterSpacing = 0.sp,
         fontFeatureSettings = TABULAR_NUMBERS,
     )
 
-private fun condensed(weight: FontWeight, size: Int, lineHeight: Int, tracking: Double) =
+private fun sans(weight: FontWeight, size: Int, lineHeight: Int, tracking: Double = 0.0) =
     TextStyle(
-        fontFamily = BarlowCondensed,
+        fontFamily = Inter,
         fontWeight = weight,
         fontSize = size.sp,
         lineHeight = lineHeight.sp,
@@ -102,7 +96,7 @@ private fun condensed(weight: FontWeight, size: Int, lineHeight: Int, tracking: 
         fontFeatureSettings = TABULAR_NUMBERS,
     )
 
-// Display, label, answer, button and chip text is rendered in caps by the components.
+// Chip and label text is rendered in caps by the components; everything else is sentence case.
 @Immutable
 data class SnapcallTypography(
     val prompt: TextStyle,
@@ -120,24 +114,17 @@ data class SnapcallTypography(
 
 val SnapcallType =
     SnapcallTypography(
-        prompt = display(40, 37),
-        score = display(96, 82),
-        verdict = display(28, 44),
-        handName = display(18, 30, 0.04),
-        answer = condensed(FontWeight.Bold, 22, 28, 0.04),
-        button = condensed(FontWeight.ExtraBold, 20, 24, 0.08),
-        chip = condensed(FontWeight.ExtraBold, 15, 32, 0.06),
-        label = condensed(FontWeight.Bold, 12, 16, 0.16),
-        cardRankBoard = condensed(FontWeight.Bold, 26, 24, 0.0),
-        cardRankHole = condensed(FontWeight.Bold, 40, 36, 0.0),
-        body =
-            TextStyle(
-                fontFamily = Barlow,
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp,
-                lineHeight = 22.sp,
-                letterSpacing = 0.sp,
-            ),
+        prompt = serif(44, 44),
+        score = serif(104, 88),
+        verdict = serif(30, 44),
+        handName = serif(20, 30),
+        answer = sans(FontWeight.SemiBold, 18, 24),
+        button = sans(FontWeight.SemiBold, 16, 24),
+        chip = sans(FontWeight.SemiBold, 13, 32, 0.06),
+        label = sans(FontWeight.SemiBold, 11, 16, 0.14),
+        cardRankBoard = serif(30, 28),
+        cardRankHole = serif(46, 42),
+        body = sans(FontWeight.Normal, 16, 23),
     )
 
 // ---------- Shape, spacing and size ----------

@@ -9,6 +9,6 @@ The approved designs live on the [Snapcall art board](https://claude.ai/artifact
 - **Round complete · Stars**: the end-of-round screen at two stars. The board's Tweaks switch it between one, two and three stars.
 - **Brand · Broadcast**: the palette, type, parts and principles on one sheet.
 
-An earlier brutalist direction was rejected and removed from the board. Do not revive it. The board's "Type pairings" row compares title and body fonts; until one is chosen, `references/tokens.md` still lists Barlow.
+An earlier brutalist direction was rejected and removed from the board. Do not revive it. The board's "Type pairings" row shows the fonts that were compared; Instrument Serif with Inter was chosen on October 27, 2026.
 
 No PNG exports are committed yet. When they are, add them beside this file and list them here.

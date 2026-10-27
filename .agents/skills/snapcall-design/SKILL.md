@@ -7,7 +7,7 @@ description: Snapcall's Broadcast visual design system and screen specs for the 
 
 Design handoff: October 27, 2026 Broadcast direction, neutral palette, table view puzzle and end-of-round star screen. The written specs take precedence over the art board if they disagree.
 
-Snapcall is an Android-first poker puzzle game for cash-game No-Limit Hold'em. Rounds are short, like Duolingo, and players learn by playing rather than through lessons. The look is **Broadcast**: every puzzle feels like the hole-card camera on a late-night poker broadcast. That means a near-black neutral studio, bright white cards, Barlow Condensed italic caps, and flat caption plates that slide in with the verdict.
+Snapcall is an Android-first poker puzzle game for cash-game No-Limit Hold'em. Rounds are short, like Duolingo, and players learn by playing rather than through lessons. The look is **Broadcast**: every puzzle feels like the hole-card camera on a late-night poker broadcast. That means a near-black neutral studio, bright white cards, Instrument Serif titles over Inter, and flat caption plates that slide in with the verdict.
 
 Think "poker broadcast graphics with the cards lit up", never "casino app" or "Material starter template".
 
@@ -27,7 +27,13 @@ Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`,
 
 ## Typography
 
-Bundle Barlow Condensed SemiBold (600), Bold (700), ExtraBold (800) and ExtraBold Italic (800 italic), plus Barlow Regular (400) and Medium (500). Both are SIL Open Font License families from Google Fonts. Display and verdict text is Barlow Condensed ExtraBold Italic in caps. Labels and answers are Barlow Condensed in tracked caps. Corrections are Barlow. Apply the sizes, weights and tracking in [references/tokens.md](references/tokens.md#type).
+Titles are **Instrument Serif** and everything you read quickly is **Inter**. The serif ties Snapcall to the card room: classic card indices, casino and tournament marks. The sans keeps answers and corrections legible at a glance. Bundle Instrument Serif Regular (400) plus Inter Regular (400), SemiBold (600) and Bold (700); both are SIL Open Font License families from Google Fonts.
+
+- Instrument Serif, in sentence case: the question, verdicts, the hand name, the score, card ranks and recap hand names.
+- Inter SemiBold: answers and buttons in sentence case, and chips and labels in small tracked caps.
+- Inter Regular: corrections and other body text.
+
+Never set the serif in all caps, bold or italic, and never use it below 20sp. Apply the sizes, weights and tracking in [references/tokens.md](references/tokens.md#type).
 
 ## Non-negotiables
 

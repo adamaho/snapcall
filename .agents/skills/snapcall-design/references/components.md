@@ -62,10 +62,10 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - A `surface` panel pinned to the bottom edge, with 20dp side padding and 24dp bottom padding plus the navigation bar inset. It slides up on answer without covering the `AnswerGrid`.
 - Its verdict `PlateChain` sits 20dp above the panel's top edge:
   - Right: a `Right` plate with the hand name, then a `Surface` sub-plate with `FIRST TRY` in `right` on a first try.
-  - Wrong: a `Wrong` plate naming the mistake, such as `NOT A FLUSH`.
+  - Wrong: a `Wrong` plate naming the mistake, such as `Not a flush`.
 - Body: one or two `body` sentences that name the exact cards.
 - Wrong answers add a `label` line in `textMuted` with a retry icon: `THIS ONE COMES BACK BEFORE THE ROUND ENDS`.
-- A primary `ActionButton` closes it: `GOT IT` after a wrong answer, `NEXT HAND` after a right one.
+- A primary `ActionButton` closes it: `Got it` after a wrong answer, `Next hand` after a right one.
 
 ## StarRow
 
@@ -76,5 +76,5 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 ## HandRecapRow
 
 - 42dp tall with 4dp corners: `surface` fill and a 1dp `outline` border, with a 30dp `surfaceKey` number plate on the left.
-- The hand name in Barlow Condensed 700, 19sp, caps.
+- The hand name in `handName` style at 21sp, sentence case.
 - A trailing chip: `FIRST TRY` with a 1dp `right` outline and `right` text, or `RETRIED` with a `wrong` fill, `onLight` text and a retry icon.
