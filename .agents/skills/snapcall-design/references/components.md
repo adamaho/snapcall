@@ -26,7 +26,7 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 - Five 4dp segments, one per situation, filling the width beside the close button with 4dp gaps.
 - Done segments: `textPrimary`. Current: `textPrimary` with the progress pulse. Upcoming: `outline`.
-- Announce as "Situation 3 of 5". Retries do not add segments.
+- Announce as "Situation 3 of 5".
 
 ## CloseButton
 
@@ -63,7 +63,6 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - Right answers get no plate: the highlighted answer already shows what was right.
 - Wrong answers start with a `Wrong` plate naming the mistake, such as `Not a flush`, 36dp tall.
 - Body: one or two `body` sentences that name the exact cards.
-- Wrong answers add a `label` line in `textMuted` with a retry icon: `THIS ONE COMES BACK BEFORE THE ROUND ENDS`.
 - A primary `ActionButton`, 52dp tall inside the card, closes it: `Got it` after a wrong answer, `Next hand` after a right one.
 
 ## StarRow
@@ -76,4 +75,4 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 - 42dp tall with 4dp corners: `surface` fill and a 1dp `outline` border, with a 30dp `surfaceKey` number plate on the left.
 - The hand name in `handName` style, sentence case.
-- A trailing 20dp icon: a check in `right` for a hand answered right, or an X in `wrong` for a missed hand. Announce as "Right" or "Missed". Retries are not shown.
+- A trailing 20dp icon: a check in `right` for a hand answered right, or an X in `wrong` for a missed hand. Announce as "Right" or "Missed".

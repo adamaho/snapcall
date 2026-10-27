@@ -49,7 +49,7 @@ Name UI components by their role, never with a `Snapcall` prefix: `PlayingCard`,
 The product decisions so far, which the specs follow:
 
 - Hand strength is the only launch module. Modules are freely selectable with independent difficulty, and a placement round is required on first entry.
-- A regular round has five situations plus retries. A wrong answer gets a quick correction and comes back before the round ends. Similar situations return in later rounds.
+- A regular round has five situations. A wrong answer gets a quick correction and the round moves on; missed hands are not repeated within the round. Retrying replays the whole round with five new hands (different permutations).
 - Puzzles progress from identifying hands, to comparing players' hands, to finding hands that beat yours.
 - Probability puzzles offer four percentages, then highlight the helpful cards and briefly show the math. They start with improving on the next card; flop probabilities come at higher difficulties.
 - Scores award 1–3 stars, and a minimum score is needed to move on to the next round.
@@ -57,7 +57,6 @@ The product decisions so far, which the specs follow:
 **Do not decide these yourself.** Use visible placeholders such as `[PASS SCORE]`, or ask:
 
 - exact pass and star thresholds
-- whether stars count first-try answers only
 - whether difficulty or rounds unlock regardless of score
 - placement round details and difficulty tiers
 - a light theme, sound and haptics
