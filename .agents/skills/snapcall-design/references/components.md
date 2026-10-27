@@ -8,7 +8,7 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 - Sizes: board 54×76dp with 5dp corners; hole 64×88dp with 7dp corners. Shadows as in `tokens.md`.
 - `highlighted`: a 3dp `right` outline at a 2dp offset. Use it for the cards that make the hand, or the helpful cards in a probability puzzle.
 - `faded`: 28% opacity, for board cards that play no part once the answer is shown.
-- `selected`: lifted 10dp with a 3dp `textPrimary` outline at a 2dp offset, while the player is picking.
+- `selected`: lifted 10dp and scaled to 110%, with a 3dp `textPrimary` outline at a 2dp offset, while the player is picking.
 - `wrongPick`: a 3dp `wrong` outline, for a picked card that is not in the best five once the pick is locked in.
 - Announce as "King of spades", adding ", selected" while selected. Cards are only interactive inside a `CardPicker`.
 
@@ -51,10 +51,10 @@ Name UI components by their role, never with a `Snapcall` prefix. Every pressabl
 
 How the player answers a hand-strength puzzle. There is no multiple choice: the answer is the five cards themselves.
 
-- `CardPicker` makes the seven cards on the `PokerTable` (five board, two hole) toggleable. A tap selects or deselects a card (`selected`). Once five are selected, further taps on unselected cards do nothing until one is deselected.
+- `CardPicker` makes the seven cards on the `PokerTable` (five board, two hole) toggleable. A tap selects or deselects a card (`selected`). Once five are selected, the other two dim to 40% and further taps on them do nothing until a card is deselected.
 - `LockInButton` is pinned to the bottom of the screen, 60dp tall and full width, with 4dp corners and an `answer` style label. With fewer than five cards selected it is disabled: `surface` fill, 1dp `outline` border, `textDim` label counting the pick ("3 of 5 picked"). With five it reads `Lock in` with a `textPrimary` fill and `onLight` label.
 - There is no prompt line or separate counter; the lifted cards and the button carry it.
-- On lock in, the picker locks. Cards in the best five get the `right` outline, selected cards outside it get `wrongPick`, and the rest fade to 28%. The `VerdictPanel` replaces the `LockInButton`.
+- On lock in, the picker locks. Cards in the best five get the `right` outline, selected cards outside it get `wrongPick`, and both stay at 110%; the rest fade to 28%. The `VerdictPanel` replaces the `LockInButton`.
 - The pick is right when it ties the best hand (same category and kickers), even if it uses different cards.
 - Announce the result, for example "King high, wrong. Your best hand is a straight."
 

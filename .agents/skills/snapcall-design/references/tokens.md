@@ -67,7 +67,7 @@ Use tabular figures for scores, counts and odds so numbers do not shift while an
 - Screen margin: 20dp. Vertical gap between sections: 18dp.
 - Board cards: 54×76dp with 6dp gaps (294dp row). Hole cards: 64×88dp with 4dp gaps, tilted −6° and +5° (the second also drops 5dp).
 - Table: 190dp tall, extending 6dp past the screen margin on each side. The board sits 54dp from its top; the hole cards sit 148dp from its top, overlapping its lower edge.
-- Lock in button: 60dp tall, full width. Selected cards lift 10dp.
+- Lock in button: 60dp tall, full width. Selected cards lift 10dp and scale to 110%; with five selected, the rest dim to 40%.
 - Action buttons: 56dp primary, 48dp secondary.
 - Progress segments: 4dp tall with 4dp gaps.
 - Close button: 44dp.
@@ -86,7 +86,7 @@ Ease out with `cubic-bezier(0.2, 0.8, 0.2, 1)` unless noted. With "Remove animat
 | Motion         | Duration | Delay                                                           | Notes                                          |
 | -------------- | -------- | --------------------------------------------------------------- | ---------------------------------------------- |
 | Deal-in        | 420ms    | Flop 100, 180, 260ms; turn 500ms; river 740ms; hole 950, 1050ms | From 36dp above, 92% scale, transparent        |
-| Card lift      | 160ms    | On tap                                                          | Selected card rises 10dp; reverses on deselect |
+| Card lift      | 160ms    | On tap                                                          | Rises 10dp, scales to 110%; reverses on undo   |
 | Verdict slide  | 320ms    | On lock in                                                      | Rises 24dp and fades in                        |
 | Tutorial step  | 300ms    | On Next                                                         | Slides in 24dp from the right                  |
 | Verdict plate  | 400ms    | 120ms                                                           | Left-to-right wipe                             |
