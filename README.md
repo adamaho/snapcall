@@ -1,8 +1,12 @@
 # Snapcall
 
-Android-first poker puzzles, built on a pnpm workspace with Effect. The current
-foundation includes the shared HTTP API contract, Node.js server, PostgreSQL
-setup, migrations, a single-screen Android app, and CI checks.
+Android-first poker puzzles, built on a pnpm workspace with Effect. The server
+now supports anonymous players and a complete five-puzzle hand recognition
+round: high card or one pair, immediate feedback, stars, and whole-round replays.
+Attempts and best completed scores persist in PostgreSQL.
+
+The Android app currently shows a welcome screen. Connecting its generated API
+client to the game UI is the next step.
 
 ## Start the server
 
@@ -14,8 +18,8 @@ cp programs/snapcall-server/.env.example programs/snapcall-server/.env
 pnpm server:dev
 ```
 
-This starts Snapcall's local Postgres on port `5435`, initializes the migration
-ledger, and starts the server on `127.0.0.1:3001`.
+This starts Snapcall's local Postgres on port `5435`, applies the player and round
+migrations, and starts the server on `127.0.0.1:3001`.
 
 ```bash
 curl http://127.0.0.1:3001/health
@@ -23,7 +27,8 @@ curl http://127.0.0.1:3001/health
 ```
 
 Swagger UI is at `/docs`; the generated contract is at `/openapi.json`.
-`/health` reports server liveness, not database readiness.
+`/health` reports server liveness, not database readiness. See the
+[server API](programs/snapcall-server/README.md) for anonymous credentials and round endpoints.
 
 ## Android app
 
@@ -48,7 +53,7 @@ installation, build variants, and client generation.
 - `infra/local`: isolated local PostgreSQL Compose project.
 - `tools/tsconfig`: shared TypeScript configuration.
 
-Run `pnpm check` for formatting, lint, type checks, HTTP unit tests, and OpenAPI
+Run `pnpm check` for formatting, lint, type checks, unit tests, and OpenAPI
 drift checks. CI also builds the server container using `pnpm turbo run build image`.
 Database tests need PostgreSQL and `TEST_DATABASE_URL`; see the
 [server contributor guide](programs/snapcall-server/CONTRIBUTING.md).

@@ -32,8 +32,9 @@ The direct package `start` and `dev` commands do not run migrations.
 `packages/snapcall-api/src/api.ts` is authoritative. HTTP handlers live in
 `src/http.ts`; `src/main.ts` wires the Node HTTP server and Effect runtime.
 The `@snapcall/snapcall-server-client` package derives its typed client from that
-contract. HTTP tests use `Client.make("")` against a real ephemeral listener
-through `NodeHttpServer.layerTest`, matching Goho.
+contract. HTTP tests use `Client.make("")` for public endpoints and
+`Client.make("", Redacted.make(token))` for authenticated rounds, against a real
+ephemeral listener through `NodeHttpServer.layerTest`, matching Goho.
 
 After changing the contract:
 
@@ -41,8 +42,18 @@ After changing the contract:
 pnpm --filter @snapcall/snapcall-server openapi:generate
 ```
 
-Commit `packages/snapcall-api/openapi.json`. `openapi:check` rejects stale output
-without requiring a running server or database. Swagger UI is served at `/docs`.
+Then regenerate the checked-in Android client:
+
+```bash
+cd programs/snapcall-android
+./gradlew :app:updateOpenApiClient --no-daemon
+```
+
+Commit `packages/snapcall-api/openapi.json` and the generated Kotlin files under
+`app/src/main/kotlin/com/adamaho/snapcall/api/generated`. Do not edit generated
+files directly. `openapi:check` rejects stale output without a running server or
+database; Android CI also checks generated client drift. Swagger UI is served
+at `/docs`.
 
 ## Database migrations
 
@@ -57,13 +68,22 @@ pnpm --filter @snapcall/snapcall-server db:migrate
 uses the same explicit `PgMigrator.fromRecord` registry as Goho, in
 `src/database/migrations.ts`, with a `snapcall_migrations` ledger.
 
-The registry starts empty because no game persistence model has been agreed.
-Running it initializes the ledger; it does not invent player or puzzle tables.
-To add the first migration:
+The registry includes `0001_rounds`, which creates:
 
-1. Create `src/database/migrations/0001-feature-name.ts`, default-exporting an
-   Effect that obtains `SqlClient.SqlClient` and executes transactional SQL.
-2. Import it in the registry and add `"0001_feature_name": migrationEffect`.
+- `players`: anonymous player IDs and unique SHA-256 token hashes.
+- `round_attempts`: player-owned attempts, start request IDs, and five stored puzzles with private solutions.
+- `round_answers`: accepted answers, ordered and unique within an attempt.
+
+Scores and completion are derived from accepted answers. The repository locks an
+owned attempt while checking and saving an answer, so concurrent submissions
+cannot count twice. Best scores consider only completed attempts for that player
+and round.
+
+To add a migration:
+
+1. Create the next numbered file, such as `src/database/migrations/0002-feature-name.ts`,
+   default-exporting an Effect that obtains `SqlClient.SqlClient` and executes transactional SQL.
+2. Import it in the registry and add `"0002_feature_name": migrationEffect`.
 3. Run the command twice to verify that the second run has no pending work.
 4. Add an integration assertion for the resulting schema or behavior.
 
@@ -79,10 +99,16 @@ pnpm check
 pnpm --filter @snapcall/snapcall-server test:unit
 ```
 
-Unit tests need no database. Integration tests use real PostgreSQL and create a
-unique schema per test, dropping it when the test finishes. They exercise the
-production migration registry and test-only migration fixtures, including
-idempotence and rollback after a failed batch. The core package also verifies
+Unit tests need no database. They cover HTTP liveness and docs, hand generation
+and classification, and scoring. Integration tests use real PostgreSQL and
+create a unique schema per test, dropping it when the test finishes.
+
+Round integration tests run the real migration, HTTP routes, bearer authentication,
+and typed client. They verify player separation, hashed credentials, private
+solutions, repeated and concurrent starts/answers, conflicting or out-of-order
+answers, progress reloads, five-answer completion, stars, and best completed
+scores across replays. Migration checks cover the production tables, repeated
+runs, and transactional rollback with test fixtures. The core package also verifies
 that the SQL and Postgres services share one pool and reuse a connection.
 
 Use an isolated local test database:

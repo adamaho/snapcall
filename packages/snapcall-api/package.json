@@ -9,7 +9,9 @@
   },
   "exports": {
     "./api": "./src/api.ts",
-    "./response": "./src/response.ts"
+    "./players": "./src/players.ts",
+    "./response": "./src/response.ts",
+    "./rounds": "./src/rounds.ts"
   },
   "scripts": {
     "clean": "rimraf node_modules dist build .turbo coverage",

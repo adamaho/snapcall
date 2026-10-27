@@ -6,8 +6,13 @@ import { HttpClient, HttpRouter } from "effect/http";
 import { expect } from "vitest";
 
 import * as Http from "#src/http.ts";
+import * as Players from "#src/players/service.ts";
+import * as Rounds from "#src/rounds/service.ts";
 
-const TestLive = HttpRouter.serve(Http.layer).pipe(Layer.provideMerge(NodeHttpServer.layerTest));
+const TestLive = HttpRouter.serve(Http.layer).pipe(
+  Layer.provide([Layer.mock(Players.Service, {}), Layer.mock(Rounds.Service, {})]),
+  Layer.provideMerge(NodeHttpServer.layerTest),
+);
 
 it.effect("returns liveness through HTTP and the generated client without a database", () =>
   Effect.gen(function* () {
